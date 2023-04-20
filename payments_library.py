@@ -1,6 +1,6 @@
 import random
 
-from math_tools import is_perfect_square, is_prime, is_perfect_power
+from math_tools import is_perfect_square, is_power_of_two, is_prime, is_perfect_power
 from payments import PaymentItem
 from utils import ArgType, randint_N, list_of_randint_N
 
@@ -52,6 +52,12 @@ class PerfectPower(PaymentItem):
         return is_perfect_power(num)
 
 
+class PowerOfTwo(PaymentItem):
+    requires = ArgType.NONE
+    def __call__(self, num: int) -> bool:
+        return is_power_of_two(num)
+
+
 class Any(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
@@ -65,6 +71,8 @@ PAYMENT_ITEMS: list = [
     Even,
     Odd,
     Square,
+    PerfectPower,
+    PowerOfTwo,
     Any
 ]
 
