@@ -4,6 +4,9 @@ from math_tools import is_prime
 from utils import Nums, present, ArgType, N
 from conditions import make_condition, Condition, ConditionFactory
 
+@make_condition(info='No condition.')
+def no_condition(nums: Nums) -> bool:
+    return True
 
 @make_condition(info='Have 0 even numbers.')
 def no_evens(nums: Nums) -> bool:
@@ -36,6 +39,7 @@ class no_number_from_interval(ConditionFactory):
 
 
 CONDITIONS = [
+    no_condition,
     no_evens, 
     no_odds, 
     no_duplicates,
@@ -48,6 +52,7 @@ CONDITION_FACTORIES = [
 ]
 
 def get_random_condition() -> Condition:
+    # TODO: make this more fair (choose from predefined condition objects too)
     if random.random() < 0.5:
         return random.choice(CONDITIONS)
     
