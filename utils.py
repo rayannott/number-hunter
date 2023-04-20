@@ -12,3 +12,5 @@ def present(nums: Nums) -> set[int]:
 class ArgType(Enum):
     ONE_INT = 'one-integer-number'
     TWO_INTS = 'two-integer-numbers'
+    NONE = 'no-arguments'
+    N_INTS = 'any-amount-of-ints'
