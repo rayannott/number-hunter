@@ -9,6 +9,10 @@ class Condition(ABC):
     def __init__(self, info: str) -> None:
         super().__init__()
         self.info = info
+
+    def get_info(self):
+        return self.info
+    
     @abstractmethod
     def __call__(self, nums: Nums) -> bool:
         ...
@@ -25,30 +29,18 @@ def make_condition(info: str):
     return decorate
 
 class ConditionFactory(ABC):
-    def __init__(self, info: str, requires: ArgType) -> None:
-        '''
-        Creates a Condition object using some arguments. Arguments' type is specified in 'requires'
-        '''
-        super().__init__()
-        self.info = info
-        self.requires = requires
+    requires: ArgType | None = None
+    info: str | None = None
+
+    def __init__(self, args: tuple) -> None:
+        self.args = args
+
+    def get_info(self):
+        return self.info.format(*self.args)
+    
+    def __repr__(self):
+        return 'cf::' + self.__class__.__name__
+    
     @abstractmethod
     def __call__(self, args: tuple) -> Condition:
         ...
-
-
-def make_condition_factory(info: str, requires: ArgType):
-    def decorate(func: Callable):
-        class _ConditionFactory(ConditionFactory):
-            def __call__(self, args: tuple) -> Condition:
-                class _Condition(Condition):
-                    def __call__(self, nums: Nums) -> bool:
-                        return func(nums, args)
-                    def __repr__(self) -> str:
-                        return 'c::' + func.__name__ + str(args)
-                return _Condition(info=info.format(*args))
-            def __repr__(self) -> str:
-                return 'cf::' + func.__name__
-        this_condition_factory = _ConditionFactory(info=info, requires=requires)
-        return this_condition_factory
-    return decorate
