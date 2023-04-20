@@ -1,7 +1,8 @@
 import random
 from math_tools import is_prime
+from utils import randint_N
 
-from utils import Nums, present, ArgType, N
+from utils import Nums, present, ArgType, N, randinterval
 from conditions import make_condition, Condition, ConditionFactory
 
 @make_condition(info='No condition.')
@@ -58,12 +59,10 @@ def get_random_condition() -> Condition:
     
     cf = random.choice(CONDITION_FACTORIES)
     if cf.requires == ArgType.ONE_INT:
-        return cf((random.randint(1, N), ))
+        return cf([randint_N(), ])
     elif cf.requires == ArgType.TWO_INTS:
-        n1, n2 = (random.randint(1, N), (random.randint(1, N)))
-        args = (min(n1, n2), max(n1, n2))
-        return cf(args)
+        return cf(randinterval())
 
-for _ in range(8):
-    cond = get_random_condition()
-    print(cond, cond.get_info())
+# for _ in range(8):
+#     cond = get_random_condition()
+#     print(cond, cond.get_info())

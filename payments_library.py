@@ -1,6 +1,8 @@
+import random
+
 from math_tools import is_perfect_square, is_prime, is_perfect_power
 from payments import PaymentItem
-from utils import ArgType
+from utils import ArgType, randint_N, list_of_randint_N
 
 
 class Literal(PaymentItem):
@@ -62,7 +64,7 @@ class Any(PaymentItem):
         return True
 
 
-PAYMENT_ITEMS = [
+PAYMENT_ITEMS: list = [
     Literal,
     Interval,
     Prime,
@@ -71,3 +73,17 @@ PAYMENT_ITEMS = [
     Square,
     Any
 ]
+
+
+def get_random_payment_item():
+    PI = random.choice(PAYMENT_ITEMS)
+    if PI.requires == ArgType.NONE:
+        return PI([])
+    elif PI.requires == ArgType.ONE_INT:
+        return PI([randint_N(), ])
+    elif PI.requires == ArgType.N_INTS:
+        return PI(list_of_randint_N())
+
+
+def get_random_payment():
+    return [get_random_payment_item() for _ in range(random.randint(1, 3))]
