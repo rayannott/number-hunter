@@ -1,4 +1,4 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 from collections.abc import Callable
 from typing import Callable
 from functools import wraps
@@ -9,7 +9,7 @@ class Condition(ABC):
     def __init__(self, info: str) -> None:
         super().__init__()
         self.info = info
-    @abstractclassmethod
+    @abstractmethod
     def __call__(self, nums: Nums) -> bool:
         ...
 
@@ -32,7 +32,7 @@ class ConditionFactory(ABC):
         super().__init__()
         self.info = info
         self.requires = requires
-    @abstractclassmethod
+    @abstractmethod
     def __call__(self, args: tuple) -> Condition:
         ...
 
