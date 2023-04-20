@@ -45,12 +45,10 @@ def make_condition_factory(info: str, requires: ArgType):
                     def __call__(self, nums: Nums) -> bool:
                         return func(nums, args)
                     def __repr__(self) -> str:
-                        return 'c::' + func.__name__
+                        return 'c::' + func.__name__ + str(args)
                 return _Condition(info=info.format(*args))
             def __repr__(self) -> str:
                 return 'cf::' + func.__name__
         this_condition_factory = _ConditionFactory(info=info, requires=requires)
         return this_condition_factory
     return decorate
-
-
