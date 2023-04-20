@@ -1,7 +1,5 @@
 from trades import Trade
 
 def get_random_trade():
-    ...
-
-
-duplicate = Trade()
+    # TODO: specific case for every ReturnType
+    pass
