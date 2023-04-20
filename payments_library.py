@@ -6,9 +6,6 @@ from utils import ArgType, randint_N, list_of_randint_N
 
 
 class Literal(PaymentItem):
-    '''
-    Any of the 'numbers'
-    '''
     requires = ArgType.N_INTS
     def __call__(self, num: int):
         return num in self.args
@@ -17,9 +14,6 @@ class Literal(PaymentItem):
 
 
 class Interval(PaymentItem):
-    '''
-    Any number from the interval
-    '''
     requires = ArgType.TWO_INTS
     def __call__(self, num: int) -> bool:
         # assert len(self.args) == 2
