@@ -26,7 +26,7 @@ def get_random_trade() -> TradeM:
     for payment_item in payment:
         cum_difficulty += payment_item.difficulty()
     cum_difficulty += 0.1 * len(payment)
-    multiplier = max(1, round(cum_difficulty * 5))
+    multiplier = min(5, max(1, round(cum_difficulty * 5)))
     random_number = random.random()
     ONE = ('one', 'one_weights'); ANY = ('any', 'any_weights'); NOT_ONE = ('not_one', 'not_one_weights')
     if len(payment) == 1:
