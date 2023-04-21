@@ -1,9 +1,6 @@
 class CustomException(Exception):
     pass
 
-class ConditionFailedException(CustomException):
-    pass
-
 class WrongNumberOfArguments(CustomException):
     pass
 
