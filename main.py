@@ -2,7 +2,7 @@ from ui import App
 
 def main():
     app = App()
-    app.run()
+    app.menu()
 
 
 if __name__ == '__main__':
