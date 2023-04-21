@@ -62,9 +62,11 @@ class App:
         print(', '.join(f'{num}({amount})' for num, amount in self.g.numbers.items() if amount))
 
     def display_trades(self):
+        max_width = max(len(str(trade.trade.payment)) for trade in self.g.my_trades) + 2
         for i, trade in enumerate(self.g.my_trades):
             if trade.amount:
-                print(f'{i}. {trade}')
+                pure_trade = trade.trade
+                print(f'{i:>3}. {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))} x {trade.amount}     ->     {pure_trade.returns.name}')
 
     def execute_command(self, command: str):
         cmds = command.split()
@@ -75,11 +77,17 @@ class App:
             case ['quit']:
                 self.running = False
                 self.running_menu = False
-            case ['nums']:
-                self.display_nums()
-            case ['trades']:
-                self.display_trades()
-            case ['inv']:
+                self.save_game()
+            case ['save']:
+                self.save_game()
+            case ['ach']:
+                if not self.g.achievements:
+                    print('no achievements')
+                else:
+                    print('*** Completed achievements ***')
+                    for ach in self.g.achievements:
+                        print(f'{ach.name}: {ach.descr}')
+            case ['inv' | '+']:
                 self.display_nums()
                 print()
                 self.display_trades()
@@ -87,12 +95,16 @@ class App:
                 # trade!
                 args = list(map(int, args_str))
                 try:
-                    returns, gifted_trade = self.g.trade(int(trade_index), args)
+                    returns, gifted_trade, just_completed_achievements = self.g.trade(int(trade_index), args)
                 except CustomException as e:
                     print(e)
                 else:
                     add = f' + new trade "{gifted_trade}".' if gifted_trade else '.'
                     print(f'You received: {returns}{add}')
+                    if just_completed_achievements:
+                        print('You\'ve just completed:')
+                        for ach in just_completed_achievements:
+                            print(f'\t{ach.name}: {ach.descr}')
 
 
     def run(self):
