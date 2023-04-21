@@ -3,7 +3,7 @@ from enum import Enum, auto
 
 class ReturnType(Enum):
     RANDOM_NUMS = auto() # list-of-random-numbers
-    PRIME_NUM = auto() # one-random-prime-number
+    RANDOM_PRIME = auto() # one-random-prime-number
     CLONE = auto() # duplicate-all-nums (3, 5) -> [3, 3, 5, 5]
     ADD_ONE = auto() # return num+1
     SUBTRACT_ONE = auto() # return num+1
@@ -15,13 +15,14 @@ class ReturnType(Enum):
     MULT_NUMS = auto() # returns a multiple of nums % 100
     MEAN = auto() # returns a mean of nums rounded to closest
     SQUARE = auto()
+    CONCATENATE = auto()
 
 
 GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
     'any': 
     [
         ReturnType.RANDOM_NUMS,
-        ReturnType.PRIME_NUM,
+        ReturnType.RANDOM_PRIME,
         ReturnType.CLONE,
         ReturnType.SQUARE,
         ReturnType.ADD_ONE,
@@ -41,8 +42,9 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
         ReturnType.SUM,
         ReturnType.MULT_NUMS,
         ReturnType.MEAN,
+        ReturnType.CONCATENATE,
     ],
-    'not_one_weights': [10, 15, 7]
+    'not_one_weights': [10, 15, 7, 3]
 }
 
 
