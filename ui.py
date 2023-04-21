@@ -82,6 +82,13 @@ class App:
                 multiplier_str = f'{pure_trade.multiplier}*' if pure_trade.multiplier > 1 else ' '
                 print(f'{i:>3}. {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))} x {trade.amount}     ->    {multiplier_str}{pure_trade.returns.name}')
 
+    def alert_new_achievements(self):
+        just_completed_achievements = self.g.check_achievements()
+        if just_completed_achievements:
+            print('--- New achievement! ---')
+            for ach in just_completed_achievements:
+                print(f'{ach.name}: {ach.descr}')
+
     def execute_command(self, command: str):
         cmds = command.split()
         match cmds:
@@ -108,32 +115,44 @@ class App:
                 if not flag in ['-a', '--all']:
                     print(f'{flag} is an unknown flag')
                     return
+                print('--- All achievements ---')
                 for ach in ACHIEVEMENTS:
                     posession_str = '+' if ach in self.g.achievements else '-'
-                    print(f'[{posession_str}] {ach.name}: {ach.descr}')
+                    print(f'[{posession_str}] {ach.name}: {ach.descr}')     
             case ['inv' | '+']:
                 self.display_nums()
                 print()
                 self.display_trades()
+            case ['sell', trade_index]:
+                returns = self.g.sell(int(trade_index))
+                print(f'You sold the trade and received: {returns}')
+                self.alert_new_achievements()
+            case ['bargain', *args_str]:
+                args = list(map(int, args_str))
+                try:
+                    received_trade = self.g.bargain(args)
+                except CustomException as e:
+                    print(e)
+                else:
+                    print(f'Bargain successful! You received: {received_trade}')
+                    self.alert_new_achievements()
             case [trade_index, *args_str]:
                 # trade!
                 args = list(map(int, args_str))
                 try:
-                    returns, gifted_trade, just_completed_achievements = self.g.trade(int(trade_index), args)
+                    returns, gifted_trade = self.g.trade(int(trade_index), args)
                 except CustomException as e:
                     print(e)
                 else:
-                    add = f' + new trade "{gifted_trade}".' if gifted_trade else '.'
+                    add = f' and new trade "{gifted_trade}".' if gifted_trade else '.'
                     print(f'You received: {returns}{add}')
-                    if just_completed_achievements:
-                        print('--- New achievement! ---')
-                        for ach in just_completed_achievements:
-                            print(f'\t{ach.name}: {ach.descr}')
-
+                    self.alert_new_achievements()
 
     def run(self):
         self.running = True
         print(f'Started game {self.gi.save_name} from {datetime.fromtimestamp(self.gi.date_created_timestamp)}')
+        self.execute_command('inv')
+        self.alert_new_achievements()
         while not self.g.is_victory() and self.running:
             inp = input('>>> ')
             self.execute_command(inp)

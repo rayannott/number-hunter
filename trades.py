@@ -31,11 +31,15 @@ class Trade:
         if not len(args) == len(self.payment):
             raise WrongNumberOfArguments(f'Wrong number of arguments: entered {len(args)}, required {len(self.payment)}')
     
-    def check_nums_amounts(self, args: list[int], nums: Nums):
+    @staticmethod
+    def check_nums_amounts(args: list[int], nums: Nums):
         needed_amounts = Counter(args)
+        not_enough_of = []
         for num, amount_needed in needed_amounts.items():
             if amount_needed > nums[num]:
-                raise NotEnoughNumbers(f'You don\'t have enough of {num}')
+                not_enough_of.append(num)
+        if not_enough_of:
+            raise NotEnoughNumbers(f'You don\'t have enough of {not_enough_of}')
 
     def payment_flags(self, args: list[int]) -> list[bool]:
         return [payment_item(arg) for arg, payment_item in zip(args, self.payment)]

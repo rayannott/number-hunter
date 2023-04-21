@@ -20,7 +20,7 @@ class Game:
     def is_victory(self):
         return all(self.numbers.values())
 
-    def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM, set[Achievement]]:
+    def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM]:
         chosen_tradem = self.my_trades[chosen_trade_index]
         chosen_trade = chosen_tradem.trade
         if chosen_tradem.amount == 0:
@@ -40,15 +40,24 @@ class Game:
             gifted_trade = None if random.random() < 0.05 else get_random_trade()
             if gifted_trade:
                 self.my_trades.append(gifted_trade)
+            return returns, gifted_trade
+    
+    def check_achievements(self):
+        completed_achievements = check_achievements(self.numbers)
+        difference = completed_achievements.difference(self.achievements)
+        self.achievements.update(completed_achievements)
+        return difference
 
-            completed_achievements = check_achievements(self.numbers)
-            difference = completed_achievements.difference(self.achievements)
-            self.achievements.update(completed_achievements)
-            return returns, gifted_trade, difference
-            
-    def roll(self):
-        # TODO
-        pass
+    def sell(self, chosen_trade_index: int) -> list[int]:
+        chosen_tradem = self.my_trades[chosen_trade_index]
+        if chosen_tradem.amount == 0:
+            raise EmptyTradeM('You have 0 of this trade')
+        chosen_tradem.amount -= 1
+        returns = list_of_randint_N(random.randint(1, 2))
+        for num in returns:
+                self.numbers[num] += 1
+        return returns
+
     def bargain(self, args: list[int]) -> TradeM:
         '''
         Give away N_FOR_BARGAIN different numbers and get one random trade. 
