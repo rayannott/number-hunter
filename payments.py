@@ -13,7 +13,7 @@ class PaymentItem(ABC):
         super().__init__()
         self.args = args
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return self.__class__.__name__
 
     @abstractmethod
