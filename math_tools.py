@@ -37,7 +37,7 @@ def is_power_of_two(n: int) -> bool:
     return 2**round(log(n, 2)) == n
 
 
-def closest_prime(n: int, N: int) -> int:
+def closest_prime(n: int) -> int:
     if is_prime(n):
         return n
     below = None
