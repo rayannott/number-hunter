@@ -22,7 +22,7 @@ class Interval(PaymentItem):
         return self.args[0] <= num <= self.args[1]
     def difficulty(self) -> float:
         delta = self.args[1] - self.args[0]
-        return 1./(delta+1)
+        return 1 + 1./98 * (1 - delta)
     def __repr__(self) -> str:
         return str(f'{self.args[0]}:{self.args[1]}')
 
