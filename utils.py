@@ -1,6 +1,8 @@
+from dataclasses import dataclass
 from enum import Enum, auto
 import random
-
+from datetime import datetime
+from string import ascii_letters
 
 N = 100
 Nums = dict[int, int]
@@ -31,3 +33,8 @@ class ArgType(Enum):
     TWO_INTS = auto() # 'two-integer-numbers'
     NONE = auto() # 'no-arguments'
     N_INTS = auto() # 'any-amount-of-ints'
+
+@dataclass
+class GameInfo:
+    save_name: str = ''.join(random.choices(ascii_letters, k=10)) + '.pi'
+    date_created_timestamp: datetime = datetime.timestamp(datetime.now())
