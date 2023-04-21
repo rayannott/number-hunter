@@ -11,17 +11,17 @@ from achievements import ACHIEVEMENTS
 HELP_STR_MENU = [
     ['help', 'print this message'],
     ['new', 'create a new game with default settings'],
-    ['new <name>', ''],
+    ['new <name>', 'create a new game with a given name'],
     ['load', 'load a list of local saves'],
     ['load <index>', 'load a game with chosen index'],
-    ['exit', 'exit the program'],
+    ['exit | quit', 'quit the program'],
     ['', ''],
 ]
 
 HELP_STR = [
     ['help', 'print this message'],
     ['exit', 'save; go back to menu'],
-    ['quit', 'save; exit the program'],
+    ['quit', 'save; quit the program'],
     ['inv | +', 'list your inventary: numbers and trades'],
     ['ach | achievements', 'list completed achievements'],
     ['ach | achievements -a', 'list all achievements'],
@@ -45,7 +45,7 @@ class App:
                     self.g = Game(self.gi)
                     self.run()
                 case ['new', name]:
-                    self.gi = GameInfo(name)
+                    self.gi = GameInfo(name + '.pi')
                     self.save_name = self.gi.save_name
                     self.g = Game(self.gi)
                     self.run()
@@ -66,8 +66,10 @@ class App:
                             self.g: Game = pickle.load(f) # TODO: does not load
                             self.gi = self.g.info
                         self.run()
-                case ['exit']:
+                case ['exit' | 'quit']:
                     self.running_menu = False
+                case _:
+                    print(f'Unknown command: {inp}')
 
     def display_nums(self):
         print(', '.join(f'{num}({amount})' for num, amount in self.g.numbers.items() if amount))
