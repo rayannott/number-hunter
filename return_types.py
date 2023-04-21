@@ -6,6 +6,7 @@ class ReturnType(Enum):
     PRIME_NUM = auto() # one-random-prime-number
     CLONE = auto() # duplicate-all-nums (3, 5) -> [3, 3, 5, 5]
     ADD_ONE = auto() # return num+1
+    SUBTRACT_ONE = auto() # return num+1
     DOUBLE = auto() # return num*2 % 100
     DIGITIZE = auto() # return [d for d in digits(num)] * 2
     FACTORIZE = auto() # return [p for p in all_prime_factors(num)] * 2
@@ -13,6 +14,7 @@ class ReturnType(Enum):
     CLOSEST_PRIME = auto() # returns prime p closest to num
     MULT_NUMS = auto() # returns a multiple of nums % 100
     MEAN_NUMS = auto() # returns a mean of nums rounded to closest
+    SQUARE = auto()
 
 
 GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
@@ -23,19 +25,22 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
         ReturnType.CLONE,
         ReturnType.SUM,
         ReturnType.MULT_NUMS,
-        ReturnType.MEAN_NUMS
+        ReturnType.MEAN_NUMS,
+        ReturnType.SQUARE,
     ],
-    'any_weights': [40, 5, 17, 7, 7, 7],
+    'any_weights': [10, 7, 20, 7, 20, 7, 7],
     'one':
     [
         ReturnType.RANDOM_NUMS,
         ReturnType.ADD_ONE,
+        ReturnType.SUBTRACT_ONE,
         ReturnType.DOUBLE,
         ReturnType.DIGITIZE,
         ReturnType.FACTORIZE,
-        ReturnType.CLOSEST_PRIME
+        ReturnType.CLOSEST_PRIME,
+        ReturnType.SQUARE,
     ],
-    'one_weights': [30, 12, 12, 7, 10, 5]
+    'one_weights': [10, 10, 10, 15, 20, 20, 7, 7]
 }
 
 

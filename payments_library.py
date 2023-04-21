@@ -19,7 +19,7 @@ class Interval(PaymentItem):
         # assert len(self.args) == 2
         return self.args[0] <= num <= self.args[1]
     def __repr__(self) -> str:
-        return str(tuple(self.args))
+        return str(f'{self.args[0]}:{self.args[1]}')
 
 
 class Prime(PaymentItem):
@@ -82,7 +82,7 @@ PAYMENT_ITEMS: list = [
     PowerOfTwo,
     Any
 ]
-PAYMENT_ITEMS_WEIGHTS: list[int] = [5, 50, 4, 30, 40, 40, 20, 10, 10, 70]
+PAYMENT_ITEMS_WEIGHTS: list[int] = [5, 50, 15, 30, 40, 40, 20, 10, 10, 32]
 
 assert len(PAYMENT_ITEMS) == len(PAYMENT_ITEMS_WEIGHTS)
 
@@ -104,14 +104,9 @@ PREDEFINED_PAYMENTS = [
     [Any([]), Any([])],
     [Prime([])],
     [Square([])],
-    [Interval([0, 10])],
-    [Interval([89, 99])],
-    [Any([])],
 ]
 
-PREDEFINED_PAYMENTS_WEIGHTS = [2, 1, 10, 15, 3, 5, 10, 10, 30]
-
 def get_random_payment():
-    if random.random() < 0.5: # TODO: temporary
-        return [get_random_payment_item() for _ in range(random.choices([1,2,3], weights=[8,2,1])[0])]
-    return random.choices(PREDEFINED_PAYMENTS, weights=PREDEFINED_PAYMENTS_WEIGHTS)[0]
+    if random.random() < 0.7:
+        return [get_random_payment_item() for _ in range(random.choices([1,2,3], weights=[3,2,1])[0])]
+    return random.choice(PREDEFINED_PAYMENTS)
