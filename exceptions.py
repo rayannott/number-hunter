@@ -1,8 +1,17 @@
-class ConditionFailedException(Exception):
+class CustomException(Exception):
     pass
 
-class WrongNumberOfArguments(Exception):
+class ConditionFailedException(CustomException):
     pass
 
-class InvalidPayment(Exception):
+class WrongNumberOfArguments(CustomException):
+    pass
+
+class InvalidPayment(CustomException):
+    pass
+
+class EmptyTradeM(CustomException):
+    pass
+
+class NotEnoughNumbers(CustomException):
     pass
