@@ -21,6 +21,7 @@ HELP_STR_MENU = [
 HELP_STR = [
     ['help', 'print this message'],
     ['exit', 'save; go back to menu'],
+    ['exit -d, --discard', 'do not save; go back to menu'],
     ['quit', 'save; quit the program'],
     ['inv | +', 'list your inventary: numbers and trades'],
     ['ach | achievements', 'list completed achievements'],
@@ -81,7 +82,7 @@ class App:
         for i, trade in enumerate(self.g.my_trades):
             if trade.amount:
                 pure_trade = trade.trade
-                multiplier_str = f'{pure_trade.multiplier}*' if pure_trade.multiplier > 1 else ' '
+                multiplier_str = f'{pure_trade.multiplier}*' if pure_trade.multiplier > 1 else '  '
                 print(f'{i:>3}.({trade.amount}) {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))}     ->    {multiplier_str}{pure_trade.returns.name}')
 
     def alert_new_achievements(self):
@@ -97,9 +98,10 @@ class App:
             case ['help']:
                 for command, info in HELP_STR:
                     print(f'{command:<20}\t\t{info}')
-            case ['exit']:
+            case ['exit', flag]:
                 self.running = False
-                self.save_game()
+                if not flag in ['-d', '--discard']:
+                    self.save_game()
             case ['quit']:
                 self.running = False
                 self.running_menu = False
@@ -109,10 +111,10 @@ class App:
             case ['ach' | 'achievements']:
                 if not self.g.achievements:
                     print('no achievements')
-                else:
-                    print('*** Completed achievements ***')
-                    for ach in self.g.achievements:
-                        print(f'{ach.name}: {ach.descr}')
+                    return
+                print('*** Completed achievements ***')
+                for ach in self.g.achievements:
+                    print(f'{ach.name}: {ach.descr}')
             case ['ach' | 'achievements', flag]:
                 if not flag in ['-a', '--all']:
                     print(f'{flag} is an unknown flag')
@@ -135,20 +137,29 @@ class App:
                     received_trade = self.g.bargain(args)
                 except CustomException as e:
                     print(e)
-                else:
-                    print(f'Bargain successful! You received: {received_trade}')
-                    self.alert_new_achievements()
-            case [trade_index, *args_str]:
+                    return
+                print(f'Bargain successful! You received: {received_trade}')
+                self.alert_new_achievements()
+            case [trade_index_str, *args_str]:
                 # trade!
-                args = list(map(int, args_str))
                 try:
-                    returns, gifted_trade = self.g.trade(int(trade_index), args)
+                    trade_index = int(trade_index_str)
+                except ValueError:
+                    print(f'Unknown command: {trade_index_str}; try "help"')
+                    return
+                try:
+                    args = list(map(int, args_str))
+                except ValueError:
+                    print('Some of the values you entered are not numbers')
+                    return
+                try:
+                    returns, gifted_trade = self.g.trade(trade_index, args)
                 except CustomException as e:
                     print(e)
-                else:
-                    add = f' and new trade "{gifted_trade}".' if gifted_trade else '.'
-                    print(f'You received: {returns}{add}')
-                    self.alert_new_achievements()
+                    return
+                add = f' and new trade "{gifted_trade}".' if gifted_trade else '.'
+                print(f'You received: {returns}{add}')
+                self.alert_new_achievements()
 
     def run(self):
         self.running = True
@@ -165,3 +176,4 @@ class App:
     def save_game(self):
         with open(os.path.join(SAVES_DIR, self.save_name), 'wb') as f:
             pickle.dump(self.g, f)
+        print('Saved')

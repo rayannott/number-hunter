@@ -6,7 +6,7 @@ from collections import Counter
 from utils import Nums, list_of_randint_N, N
 from return_types import ReturnType
 from payments import Payment
-from exceptions import WrongNumberOfArguments, InvalidPayment, NotEnoughNumbers
+from exceptions import NumberOutOfRange, WrongNumberOfArguments, InvalidPayment, NotEnoughNumbers
 from math_tools import random_prime, closest_prime, digitize, all_prime_factors
 
 
@@ -36,19 +36,23 @@ class Trade:
         needed_amounts = Counter(args)
         not_enough_of = []
         for num, amount_needed in needed_amounts.items():
-            if amount_needed > nums[num]:
+            amount_present = nums.get(num)
+            if amount_present is None:
+                raise NumberOutOfRange(f'Number {num} is out of range')
+            if amount_needed > amount_present:
                 not_enough_of.append(num)
         if not_enough_of:
             raise NotEnoughNumbers(f'You don\'t have enough of {not_enough_of}')
 
     def payment_flags(self, args: list[int]) -> list[bool]:
+        self.args = args
         return [payment_item(arg) for arg, payment_item in zip(args, self.payment)]
     
-    def interpret_invalid_payment(self, playment_flags: list[bool]) -> list[str]:
+    def interpret_invalid_payment(self, playment_flags: list[bool], args: list[int]) -> list[str]:
         res = []
-        for payment_flag, payment_item in zip(playment_flags, self.payment):
+        for i, (payment_flag, payment_item) in enumerate(zip(playment_flags, self.payment)):
             if not payment_flag:
-                res.append(f'{payment_item} is not satisfied')
+                res.append(f'{args[i]} is not {payment_item}')
         return res
     
     def decide_returns(self, args) -> list[int]:
@@ -105,7 +109,7 @@ class Trade:
         self.check_nums_amounts(args, nums)
         payment_flags = self.payment_flags(args)
         if not all(payment_flags):
-            raise InvalidPayment(f'Invalid payment: {", ".join(self.interpret_invalid_payment(payment_flags))}')
+            raise InvalidPayment(f'Invalid payment:\n{", ".join(self.interpret_invalid_payment(payment_flags, args))}')
         return self.decide_returns(args)
 
 

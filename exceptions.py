@@ -13,6 +13,9 @@ class EmptyTradeM(CustomException):
 class NotEnoughNumbers(CustomException):
     pass
 
+class NumberOutOfRange(CustomException):
+    pass
+
 class NumbersNotUnique(CustomException):
     pass
 

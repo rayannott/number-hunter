@@ -3,7 +3,8 @@ import random
 from trades import TradeM, Trade
 from utils import N_FOR_BARGAIN, GameInfo, N
 from trades_library import get_random_trade
-from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, BargainWrongNumberOfArgs, InvalidTradeIndex
+from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, \
+    BargainWrongNumberOfArgs, InvalidTradeIndex
 from utils import list_of_randint_N
 from achievements import check_achievements, Achievement
 
@@ -34,10 +35,10 @@ class Game:
             raise e
         else:
             # successful trade
-            for num in returns:
-                self.numbers[num] += 1
             for arg in args:
                 self.numbers[arg] -= 1
+            for num in returns:
+                self.numbers[num] += 1
 
             chosen_tradem.amount -= 1
             gifted_trade = None if random.random() < 0.05 else get_random_trade()
