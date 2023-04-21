@@ -25,7 +25,7 @@ class Trade:
         self.args = None
 
     def __repr__(self) -> str:
-        return f'{self.payment} -> {self.returns.name}'
+        return f'{str(self.payment)} -> {self.returns.name}'
 
     def check_args_len(self, args: list[int]):
         if not len(args) == len(self.payment):
@@ -77,6 +77,8 @@ class Trade:
                 return [prod(args) % N]
             case ReturnType.MEAN_NUMS:
                 return [round(sum(args)/len(args))]
+            case ReturnType.SQUARE:
+                return [el ** 2 % N for el in args]
 
 
     def execute(self, args: list[int], nums: Nums) -> list[int]:
