@@ -2,7 +2,7 @@ import os
 import pickle
 from datetime import datetime
 
-from utils import SAVES_DIR, GameInfo
+from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN
 from game import Game
 from exceptions import CustomException
 from achievements import ACHIEVEMENTS
@@ -27,6 +27,8 @@ HELP_STR = [
     ['ach | achievements -a', 'list all achievements'],
     ['<trade_index> *<args>', 'trade numbers!'],
     ['save', 'save the current state of the game (this is done automatically on "exit" and "quit")'],
+    ['sell <trade_index>', 'give away the chosen trade and get from 1 to 2 random numbers'],
+    ['bargain *<args>', f'give away {N_FOR_BARGAIN} unique numbers to get one random trade'],
 ]
 
 class App:
@@ -80,7 +82,7 @@ class App:
             if trade.amount:
                 pure_trade = trade.trade
                 multiplier_str = f'{pure_trade.multiplier}*' if pure_trade.multiplier > 1 else ' '
-                print(f'{i:>3}. {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))} x {trade.amount}     ->    {multiplier_str}{pure_trade.returns.name}')
+                print(f'{i:>3}.({trade.amount}) {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))}     ->    {multiplier_str}{pure_trade.returns.name}')
 
     def alert_new_achievements(self):
         just_completed_achievements = self.g.check_achievements()
