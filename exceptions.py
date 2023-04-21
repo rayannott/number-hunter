@@ -15,3 +15,5 @@ class EmptyTradeM(CustomException):
 
 class NotEnoughNumbers(CustomException):
     pass
+
+# TODO: add more exceptions so that nothing crushes
