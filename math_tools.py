@@ -12,8 +12,10 @@ def is_prime(n: int) ->  bool:
             return False    
     return True
 
-PRIMES_UP_TO_N = [el for el in range(N) if is_prime(el)]
+def get_primes_up_to():
+    return [el for el in range(N) if is_prime(el)]
 
+PRIMES_UP_TO_N = get_primes_up_to()
 
 def random_prime() -> int:
     return random.choice(PRIMES_UP_TO_N)
@@ -35,7 +37,7 @@ def is_power_of_two(n: int) -> bool:
     return 2**round(log(n, 2)) == n
 
 
-def closest_prime(n: int) -> int:
+def closest_prime(n: int, N: int) -> int:
     if is_prime(n):
         return n
     below = None
