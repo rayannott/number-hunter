@@ -32,6 +32,6 @@ def get_random_trade() -> TradeM:
     if len(payment) == 1:
         population_key, weights_key = ONE if random_number < 0.8 else ANY
     else:
-        population_key, weights_key = ANY if random_number < 0.5 else NOT_ONE 
+        population_key, weights_key = ANY if random_number < 0.75 else NOT_ONE 
     return_type = random.choices(GROUPS_BY_PAYMENT_LEN[population_key], weights=GROUPS_BY_PAYMENT_LEN[weights_key])[0]
     return TradeM(Trade(payment, return_type, multiplier), amount)
