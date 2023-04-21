@@ -1,15 +1,13 @@
 import random
 from trades import TradeM
-from utils import N
+from utils import GameInfo, N
 from trades_library import get_random_trade
 from exceptions import EmptyTradeM, CustomException
 from utils import list_of_randint_N
 
 class Game:
-    def __init__(self) -> None:
-        '''
-        :param N: number of integers to collect (from 0 to N-1)
-        '''
+    def __init__(self, gi: GameInfo) -> None:
+        self.info = gi
         self.numbers = {i: 0 for i in range(N)}
         for el in list_of_randint_N(10):
             self.numbers[el] += 1
@@ -44,11 +42,6 @@ class Game:
                 self.my_trades.append(gifted_trade)
             return returns, gifted_trade
             
-
-    def buy(self, chosen_deal_index: int, args: list[int]):
-        chosen_deal = self.available_deals[chosen_deal_index]
-        # TODO
-    
     def roll(self):
         # TODO
         pass
