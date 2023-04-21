@@ -52,6 +52,8 @@ class Trade:
         match self.returns:
             case ReturnType.ADD_ONE:
                 to_ret = [(args[0] + 1) % N]
+            case ReturnType.SUBTRACT_ONE:
+                to_ret = [(args[0] - 1) % N]
             case ReturnType.DOUBLE:
                 to_ret = [(args[0] * 2) % N]
             case ReturnType.DIGITIZE:
@@ -73,10 +75,12 @@ class Trade:
                 to_ret = [sum(args) % N]
             case ReturnType.MULT_NUMS:
                 to_ret = [prod(args) % N]
-            case ReturnType.MEAN_NUMS:
+            case ReturnType.MEAN:
                 to_ret = [round(sum(args)/len(args))]
             case ReturnType.SQUARE:
                 to_ret = [el ** 2 % N for el in args]
+            case _:
+                raise Exception(f'Mismatch: {self.returns} is unknown return type')
         return to_ret * self.multiplier
 
     def execute(self, args: list[int], nums: Nums) -> list[int]:
