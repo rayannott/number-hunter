@@ -16,6 +16,7 @@ class ReturnType(Enum):
     MEAN = auto() # returns a mean of nums rounded to closest
     SQUARE = auto()
     CONCATENATE = auto()
+    HALVE = auto()
 
 
 GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
@@ -35,8 +36,9 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
         ReturnType.DIGITIZE,
         ReturnType.FACTORIZE,
         ReturnType.CLOSEST_PRIME,
+        ReturnType.HALVE,
     ],
-    'one_weights': [15, 20, 20, 7],
+    'one_weights': [15, 20, 20, 7, 15],
     'not_one':
     [
         ReturnType.SUM,
