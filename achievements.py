@@ -56,7 +56,7 @@ class GetNumberOne(Achievement):
 ACHIEVEMENTS = [
     AllBelow10('Digital Collection', 'Collect all numbers below 10'),
     AllBelow50('Lower Half', 'Collect all numbers below 50'),
-    AllSquares('Sqare Fan', 'Collect all perfect square numbers'),
+    AllSquares('Square Fan', 'Collect all perfect square numbers'),
     AllPowersOfTwo('True Programmer', 'Collect all powers of two'),
     ALotOfOneNumber('Dedication', 'Collect 10 or more of one number'),
     GetNumberOne('Unity', 'Get a number 1')
