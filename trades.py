@@ -55,6 +55,13 @@ class Trade:
         match self.returns:
             case ReturnType.DOUBLE:
                 to_ret = [(args[0] * 2) % N]
+            case ReturnType.HALVE:
+                # if even -- integer division; if odd -- ceil(num/2), floor(num/2)
+                num = args[0]
+                if num % 2 == 0:
+                    to_ret = [num // 2]
+                else:
+                    to_ret = [num // 2, num // 2 + 1]
             case ReturnType.DIGITIZE:
                 to_ret = digitize(args[0])
             case ReturnType.FACTORIZE:
@@ -108,4 +115,4 @@ class TradeM:
     trade: Trade
     amount: int
     def __repr__(self) -> str:
-        return f'{self.amount} x {self.trade}'
+        return f'({self.amount}) {self.trade}'
