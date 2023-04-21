@@ -1,9 +1,10 @@
-from enum import Enum
+from enum import Enum, auto
 import random
 
 
 N = 100
 Nums = dict[int, int]
+SAVES_DIR = 'saves'
 
 
 def present(nums: Nums) -> set[int]:
@@ -14,7 +15,7 @@ def present(nums: Nums) -> set[int]:
 
 
 def randint_N() -> int:
-    return random.randint(1, N)
+    return random.randrange(0, N)
 
 
 def list_of_randint_N(len_: int) -> list[int]:
@@ -26,14 +27,7 @@ def randinterval() -> int:
 
 
 class ArgType(Enum):
-    ONE_INT = 'one-integer-number'
-    TWO_INTS = 'two-integer-numbers'
-    NONE = 'no-arguments'
-    N_INTS = 'any-amount-of-ints'
-
-
-class ReturnType(Enum):
-    RANDOM_NUMS = 'list-of-random-numbers'
-    PRIME_NUM = 'one-random-prime-number'
-    DUPLICATE_LITERALS = 'duplicate-all-literals' # Lit(3, 5) -> [3, 3, 5, 5]
-    
+    ONE_INT = auto() # 'one-integer-number'
+    TWO_INTS = auto() # 'two-integer-numbers'
+    NONE = auto() # 'no-arguments'
+    N_INTS = auto() # 'any-amount-of-ints'
