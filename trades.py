@@ -3,11 +3,10 @@ import random
 from math import prod
 from collections import Counter
 
-from payments_library import Literal
 from utils import Nums, list_of_randint_N, N
 from return_types import ReturnType
-from payments import PaymentItem, Payment
-from exceptions import ConditionFailedException, WrongNumberOfArguments, InvalidPayment, NotEnoughNumbers
+from payments import Payment
+from exceptions import WrongNumberOfArguments, InvalidPayment, NotEnoughNumbers
 from math_tools import random_prime, closest_prime, digitize, all_prime_factors
 
 
@@ -50,10 +49,6 @@ class Trade:
     
     def decide_returns(self, args) -> list[int]:
         match self.returns:
-            case ReturnType.ADD_ONE:
-                to_ret = [(args[0] + 1) % N]
-            case ReturnType.SUBTRACT_ONE:
-                to_ret = [(args[0] - 1) % N]
             case ReturnType.DOUBLE:
                 to_ret = [(args[0] * 2) % N]
             case ReturnType.DIGITIZE:
@@ -62,13 +57,10 @@ class Trade:
                 to_ret = all_prime_factors(args[0])
             case ReturnType.CLOSEST_PRIME:
                 to_ret = [closest_prime(args[0])]
-            case ReturnType.RANDOM_NUMS:
-                to_ret = list_of_randint_N(
-                    random.choices([1, 2, 3, 4, 5], 
-                           weights=[1, 5, 15, 8, 5])[0]
-                )
-            case ReturnType.PRIME_NUM:
-                to_ret = [random_prime()]
+            case ReturnType.SUBTRACT_ONE:
+                to_ret = [(el - 1) % N for el in args]
+            case ReturnType.ADD_ONE:
+                to_ret = [(el + 1) % N for el in args]
             case ReturnType.CLONE:
                 to_ret =  args * 2
             case ReturnType.SUM:
@@ -79,6 +71,20 @@ class Trade:
                 to_ret = [round(sum(args)/len(args))]
             case ReturnType.SQUARE:
                 to_ret = [el ** 2 % N for el in args]
+            case ReturnType.CONCATENATE:
+                to_ret = [int(''.join(map(str, args))) % N]
+            case ReturnType.RANDOM_PRIME:
+                return [random_prime() for _ in range(self.multiplier)]
+            case ReturnType.RANDOM_NUMS:
+                to_ret = []
+                for _ in range(self.multiplier):
+                    to_ret.extend(
+                        list_of_randint_N(
+                            random.choices([1, 2, 3, 4, 5], 
+                                   weights=[1, 5, 15, 8, 5])[0]
+                        )   
+                    )
+                return to_ret
             case _:
                 raise Exception(f'Mismatch: {self.returns} is unknown return type')
         return to_ret * self.multiplier
