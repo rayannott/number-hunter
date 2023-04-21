@@ -21,7 +21,7 @@ class App:
         game_ind_str = input('Choose save: ')
         self.save_name = game_files[int(game_ind_str)] # TODO try int()
         with open(os.path.join(SAVES_DIR, self.save_name)) as f:
-            g = pickle.load(f)
+            g = pickle.load(f) # TODO: does not load
             return g
 
     def __init__(self) -> None:
