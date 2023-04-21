@@ -16,7 +16,7 @@ class Game:
             self.numbers[el] += 1
         self.my_trades: list[TradeM] = [get_random_trade() for _ in range(10)]
         self.available_deals = []
-        self.achievements: set[Achievement] = set()
+        self.achievements: set[Achievement] = check_achievements(self.numbers)
 
     def is_victory(self):
         return all(self.numbers.values())
@@ -47,7 +47,6 @@ class Game:
 
             completed_achievements = check_achievements(self.numbers)
             difference = completed_achievements.difference(self.achievements)
-            print('new achievements', difference)
             self.achievements.update(completed_achievements)
             return returns, gifted_trade, difference
             
