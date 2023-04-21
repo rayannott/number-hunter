@@ -53,7 +53,7 @@ class GetNumberOne(Achievement):
     def __call__(self, nums: Nums) -> bool:
         return nums[1] > 0
 
-ACHIEVEMENTS = [
+ACHIEVEMENTS: list[Achievement] = [
     AllBelow10('Digital Collection', 'Collect all numbers below 10'),
     AllBelow50('Lower Half', 'Collect all numbers below 50'),
     AllSquares('Square Fan', 'Collect all perfect square numbers'),
