@@ -66,7 +66,8 @@ class App:
         for i, trade in enumerate(self.g.my_trades):
             if trade.amount:
                 pure_trade = trade.trade
-                print(f'{i:>3}. {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))} x {trade.amount}     ->     {pure_trade.returns.name}')
+                multiplier_str = f'{pure_trade.multiplier}*' if pure_trade.multiplier > 1 else ' '
+                print(f'{i:>3}. {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))} x {trade.amount}     ->    {multiplier_str}{pure_trade.returns.name}')
 
     def execute_command(self, command: str):
         cmds = command.split()

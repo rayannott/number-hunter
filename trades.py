@@ -16,16 +16,17 @@ class Trade:
     In-game trade: payment + condition -> numbers.
     Main way to collect new numbers
     '''
-    def __init__(self, payment: Payment, returns: ReturnType) -> None:
+    def __init__(self, payment: Payment, returns: ReturnType, multiplier: int) -> None:
         '''
-        Give numbers from 'payment' and get numbers from 'returns'
+        Give numbers from 'payment' and get numbers from 'returns' times 'multiplier'
         '''
         self.payment = payment
         self.returns = returns
         self.args = None
+        self.multiplier = multiplier
 
     def __repr__(self) -> str:
-        return f'{str(self.payment)} -> {self.returns.name}'
+        return f'{str(self.payment)} -> {self.multiplier}*{self.returns.name}'
 
     def check_args_len(self, args: list[int]):
         if not len(args) == len(self.payment):
@@ -50,36 +51,33 @@ class Trade:
     def decide_returns(self, args) -> list[int]:
         match self.returns:
             case ReturnType.ADD_ONE:
-                return [(args[0] + 1) % N]
+                to_ret = [(args[0] + 1) % N]
             case ReturnType.DOUBLE:
-                return [(args[0] * 2) % N]
+                to_ret = [(args[0] * 2) % N]
             case ReturnType.DIGITIZE:
-                return digitize(args[0]) * 3
+                to_ret = digitize(args[0])
             case ReturnType.FACTORIZE:
-                return all_prime_factors(args[0]) * 2
+                to_ret = all_prime_factors(args[0])
             case ReturnType.CLOSEST_PRIME:
-                return [closest_prime(args[0])]
-            
+                to_ret = [closest_prime(args[0])]
             case ReturnType.RANDOM_NUMS:
-                return list_of_randint_N(
+                to_ret = list_of_randint_N(
                     random.choices([1, 2, 3, 4, 5], 
                            weights=[1, 5, 15, 8, 5])[0]
                 )
             case ReturnType.PRIME_NUM:
-                return [random_prime()]
+                to_ret = [random_prime()]
             case ReturnType.CLONE:
-                if len(set(args)) == 1:
-                    return args * (len(args) + 1)
-                return args * 2
+                to_ret =  args * 2
             case ReturnType.SUM:
-                return [sum(args) % N]
+                to_ret = [sum(args) % N]
             case ReturnType.MULT_NUMS:
-                return [prod(args) % N]
+                to_ret = [prod(args) % N]
             case ReturnType.MEAN_NUMS:
-                return [round(sum(args)/len(args))]
+                to_ret = [round(sum(args)/len(args))]
             case ReturnType.SQUARE:
-                return [el ** 2 % N for el in args]
-
+                to_ret = [el ** 2 % N for el in args]
+        return to_ret * self.multiplier
 
     def execute(self, args: list[int], nums: Nums) -> list[int]:
         self.check_args_len(args)

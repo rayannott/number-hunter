@@ -22,11 +22,14 @@ def get_random_trade() -> TradeM:
     
     amount = random.choices([1,2,3,4,5], weights=[20, 20, 5, 2, 1], k=1)[0]
     payment = get_random_payment()
+    cum_difficulty = 0
+    for payment_item in payment:
+        cum_difficulty += payment_item.difficulty()
+    cum_difficulty += 0.12 * len(payment)
+    multiplier = max(1, round(cum_difficulty * 5))
     if len(payment) == 1:
         return_type = random.choices(GROUPS_BY_PAYMENT_LEN['one'], weights=GROUPS_BY_PAYMENT_LEN['one_weights'])[0]
     else:
         return_type = random.choices(GROUPS_BY_PAYMENT_LEN['any'], weights=GROUPS_BY_PAYMENT_LEN['any_weights'])[0]
-    return TradeM(
-        Trade(payment, return_type),
-        amount
-    )
+    
+    return TradeM(Trade(payment, return_type, multiplier), amount)

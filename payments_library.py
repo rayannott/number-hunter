@@ -9,6 +9,8 @@ class Literal(PaymentItem):
     requires = ArgType.N_INTS
     def __call__(self, num: int):
         return num in self.args
+    def difficulty(self) -> float:
+        return 1./len(self.args) if (1 not in self.args and 2 not in self.args) else 0.2
     def __repr__(self):
         return '|'.join(map(str, self.args))
 
@@ -18,6 +20,9 @@ class Interval(PaymentItem):
     def __call__(self, num: int) -> bool:
         # assert len(self.args) == 2
         return self.args[0] <= num <= self.args[1]
+    def difficulty(self) -> float:
+        delta = self.args[1] - self.args[0]
+        return 1./(delta+1)
     def __repr__(self) -> str:
         return str(f'{self.args[0]}:{self.args[1]}')
 
@@ -26,48 +31,62 @@ class Prime(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return is_prime(num)
+    def difficulty(self) -> float:
+        return 0.15
 
 
 class Even(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return num % 2 == 0
+    def difficulty(self) -> float:
+        return 0.05
 
 
 class Odd(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return num % 2 == 1
-
+    def difficulty(self) -> float:
+        return 0.05
 
 class Square(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return is_perfect_square(num)
+    def difficulty(self) -> float:
+        return 0.15
 
 
 class PerfectPower(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return is_perfect_power(num)
+    def difficulty(self) -> float:
+        return 0.2
 
 
 class PowerOfTwo(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return is_power_of_two(num)
+    def difficulty(self) -> float:
+        return 0.3
 
 
 class Any(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return True
-    
+    def difficulty(self) -> float:
+        return 0.
 
 class NotPrime(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
         return not is_prime(num)
+    def difficulty(self) -> float:
+        return 0.05
 
 
 PAYMENT_ITEMS: list = [

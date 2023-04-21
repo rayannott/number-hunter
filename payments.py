@@ -19,6 +19,13 @@ class PaymentItem(ABC):
     @abstractmethod
     def __call__(self, num: int) -> bool:
         ...
+    
+    @abstractmethod
+    def difficulty(self) -> float:
+        '''
+        An indication of how difficult it is to satisfy this payment item
+        '''
+        ...
 
 
 Payment = list[PaymentItem]
