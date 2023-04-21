@@ -5,9 +5,10 @@ from datetime import datetime
 from utils import SAVES_DIR, GameInfo
 from game import Game
 from exceptions import CustomException
+from achievements import ACHIEVEMENTS
 
 
-HELP_STR = [
+HELP_STR_MENU = [
     ['help', 'print this message'],
     ['new', 'create a new game with default settings'],
     ['new <name>', ''],
@@ -17,6 +18,16 @@ HELP_STR = [
     ['', ''],
 ]
 
+HELP_STR = [
+    ['help', 'print this message'],
+    ['exit', 'save; go back to menu'],
+    ['quit', 'save; exit the program'],
+    ['inv | +', 'list your inventary: numbers and trades'],
+    ['ach | achievements', 'list completed achievements'],
+    ['ach | achievements -a', 'list all achievements'],
+    ['<trade_index> *<args>', 'trade numbers!'],
+    ['save', 'save the current state of the game (this is done automatically on "exit" and "quit")'],
+]
 
 class App:
     def menu(self):
@@ -26,7 +37,7 @@ class App:
             inp = input(': ')
             match inp.split():
                 case ['help']:
-                    for command, info in HELP_STR:
+                    for command, info in HELP_STR_MENU:
                         print(f'{command:<10}\t\t{info}')
                 case ['new']:
                     self.gi = GameInfo()
@@ -72,6 +83,9 @@ class App:
     def execute_command(self, command: str):
         cmds = command.split()
         match cmds:
+            case ['help']:
+                for command, info in HELP_STR:
+                    print(f'{command:<20}\t\t{info}')
             case ['exit']:
                 self.running = False
                 self.save_game()
@@ -81,13 +95,20 @@ class App:
                 self.save_game()
             case ['save']:
                 self.save_game()
-            case ['ach']:
+            case ['ach' | 'achievements']:
                 if not self.g.achievements:
                     print('no achievements')
                 else:
                     print('*** Completed achievements ***')
                     for ach in self.g.achievements:
                         print(f'{ach.name}: {ach.descr}')
+            case ['ach' | 'achievements', flag]:
+                if not flag in ['-a', '--all']:
+                    print(f'{flag} is an unknown flag')
+                    return
+                for ach in ACHIEVEMENTS:
+                    posession_str = '+' if ach in self.g.achievements else '-'
+                    print(f'[{posession_str}] {ach.name}: {ach.descr}')
             case ['inv' | '+']:
                 self.display_nums()
                 print()
@@ -103,7 +124,7 @@ class App:
                     add = f' + new trade "{gifted_trade}".' if gifted_trade else '.'
                     print(f'You received: {returns}{add}')
                     if just_completed_achievements:
-                        print('You\'ve just completed:')
+                        print('--- New achievement! ---')
                         for ach in just_completed_achievements:
                             print(f'\t{ach.name}: {ach.descr}')
 
