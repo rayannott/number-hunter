@@ -21,11 +21,15 @@ def randint_N() -> int:
 
 
 def list_of_randint_N(len_: int) -> list[int]:
-    return list({randint_N() for _ in range(len_)})
+    return list(randint_N() for _ in range(len_))
 
 
-def randinterval() -> int:
-    return sorted(list_of_randint_N(2))
+def randinterval() -> list[int]:
+    n1 = randint_N()
+    n2 = randint_N()
+    while n2 == n1:
+        n2 = randint_N()
+    return [min(n1, n2), max(n1, n2)]
 
 
 class ArgType(Enum):
