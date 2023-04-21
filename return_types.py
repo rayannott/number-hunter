@@ -4,7 +4,7 @@ from enum import Enum, auto
 class ReturnType(Enum):
     RANDOM_NUMS = auto() # list-of-random-numbers
     PRIME_NUM = auto() # one-random-prime-number
-    DUPLICATE = auto() # duplicate-all-nums (3, 5) -> [3, 3, 5, 5]
+    CLONE = auto() # duplicate-all-nums (3, 5) -> [3, 3, 5, 5]
     ADD_ONE = auto() # return num+1
     DOUBLE = auto() # return num*2 % 100
     DIGITIZE = auto() # return [d for d in digits(num)] * 2
@@ -20,12 +20,12 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
     [
         ReturnType.RANDOM_NUMS,
         ReturnType.PRIME_NUM,
-        ReturnType.DUPLICATE,
+        ReturnType.CLONE,
         ReturnType.SUM,
         ReturnType.MULT_NUMS,
         ReturnType.MEAN_NUMS
     ],
-    'any_weights': [40, 5, 10, 7, 7, 7],
+    'any_weights': [40, 5, 17, 7, 7, 7],
     'one':
     [
         ReturnType.RANDOM_NUMS,
