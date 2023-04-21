@@ -16,12 +16,12 @@ class Game:
             self.numbers[el] += 1
         self.my_trades: list[TradeM] = [get_random_trade() for _ in range(10)]
         self.available_deals = []
-        self.achievements: list[Achievement] = []
+        self.achievements: set[Achievement] = set()
 
     def is_victory(self):
         return all(self.numbers.values())
 
-    def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM, list[Achievement]]:
+    def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM, set[Achievement]]:
         chosen_tradem = self.my_trades[chosen_trade_index]
         chosen_trade = chosen_tradem.trade
         if chosen_tradem.amount == 0:
@@ -45,9 +45,11 @@ class Game:
             if gifted_trade:
                 self.my_trades.append(gifted_trade)
 
-            just_completed_achievements = check_achievements(self.numbers)
-            self.achievements.extend(just_completed_achievements)
-            return returns, gifted_trade, just_completed_achievements
+            completed_achievements = check_achievements(self.numbers)
+            difference = completed_achievements.difference(self.achievements)
+            print('new achievements', difference)
+            self.achievements.update(completed_achievements)
+            return returns, gifted_trade, difference
             
     def roll(self):
         # TODO
