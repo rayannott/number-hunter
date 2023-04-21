@@ -1,9 +1,9 @@
 import random
 
-from trades import TradeM
-from utils import GameInfo, N
+from trades import TradeM, Trade
+from utils import N_FOR_BARGAIN, GameInfo, N
 from trades_library import get_random_trade
-from exceptions import EmptyTradeM, CustomException
+from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, BargainWrongNumberOfArgs
 from utils import list_of_randint_N
 from achievements import check_achievements, Achievement
 
@@ -15,7 +15,6 @@ class Game:
         for el in list_of_randint_N(10):
             self.numbers[el] += 1
         self.my_trades: list[TradeM] = [get_random_trade() for _ in range(10)]
-        self.available_deals = []
         self.achievements: set[Achievement] = check_achievements(self.numbers)
 
     def is_victory(self):
@@ -38,9 +37,6 @@ class Game:
                 self.numbers[arg] -= 1
 
             chosen_tradem.amount -= 1
-            if chosen_tradem == 0:
-                # remove empty tradems
-                pass
             gifted_trade = None if random.random() < 0.05 else get_random_trade()
             if gifted_trade:
                 self.my_trades.append(gifted_trade)
@@ -53,3 +49,15 @@ class Game:
     def roll(self):
         # TODO
         pass
+    def bargain(self, args: list[int]) -> TradeM:
+        '''
+        Give away N_FOR_BARGAIN different numbers and get one random trade. 
+        '''
+        if len(args) != len(set(args)):
+            raise NumbersNotUnique(f'Numbers are not unique: {args}')
+        if len(args) != N_FOR_BARGAIN:
+            raise BargainWrongNumberOfArgs(f'Needs {N_FOR_BARGAIN} unique numbers; got {len(args)}')
+        Trade.check_nums_amounts(args, self.numbers)
+        for arg in args:
+                self.numbers[arg] -= 1
+        return get_random_trade()

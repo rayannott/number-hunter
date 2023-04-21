@@ -6,6 +6,8 @@ from string import ascii_letters
 
 N = 100
 Nums = dict[int, int]
+N_FOR_BARGAIN = 4
+
 SAVES_DIR = 'saves'
 
 
