@@ -25,11 +25,8 @@ def get_random_trade() -> TradeM:
     cum_difficulty = 0
     for payment_item in payment:
         cum_difficulty += payment_item.difficulty()
-    cum_difficulty += 0.12 * len(payment)
+    cum_difficulty += 0.15 * len(payment)
     multiplier = max(1, round(cum_difficulty * 5))
-    if len(payment) == 1:
-        return_type = random.choices(GROUPS_BY_PAYMENT_LEN['one'], weights=GROUPS_BY_PAYMENT_LEN['one_weights'])[0]
-    else:
-        return_type = random.choices(GROUPS_BY_PAYMENT_LEN['any'], weights=GROUPS_BY_PAYMENT_LEN['any_weights'])[0]
-    
+    population_key, weights_key = 'any', 'any_weights' if len(payment) != 1 or random.random() < 0.5 else 'one', 'one_weights'
+    return_type = random.choices(GROUPS_BY_PAYMENT_LEN[population_key], weights=GROUPS_BY_PAYMENT_LEN[weights_key])[0]
     return TradeM(Trade(payment, return_type, multiplier), amount)
