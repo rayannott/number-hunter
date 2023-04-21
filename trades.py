@@ -79,7 +79,6 @@ class Trade:
 
     def execute(self, args: list[int], nums: Nums) -> list[int]:
         self.check_args_len(args)
-        self.check_condition(nums)
         self.check_nums_amounts(args, nums)
         payment_flags = self.payment_flags(args)
         if not all(payment_flags):
