@@ -18,7 +18,7 @@ class Trade:
     '''
     def __init__(self, payment: Payment, returns: ReturnType) -> None:
         '''
-        Give numbers from 'payment' and get numbers from 'returns' if the 'condition' is true
+        Give numbers from 'payment' and get numbers from 'returns'
         '''
         self.payment = payment
         self.returns = returns
@@ -54,9 +54,9 @@ class Trade:
             case ReturnType.DOUBLE:
                 return [(args[0] * 2) % N]
             case ReturnType.DIGITIZE:
-                return digitize(args[0])
+                return digitize(args[0]) * 3
             case ReturnType.FACTORIZE:
-                return all_prime_factors(args[0])
+                return all_prime_factors(args[0]) * 2
             case ReturnType.CLOSEST_PRIME:
                 return [closest_prime(args[0])]
             
@@ -67,7 +67,9 @@ class Trade:
                 )
             case ReturnType.PRIME_NUM:
                 return [random_prime()]
-            case ReturnType.DUPLICATE:
+            case ReturnType.CLONE:
+                if len(set(args)) == 1:
+                    return args * (len(args) + 1)
                 return args * 2
             case ReturnType.SUM:
                 return [sum(args) % N]
