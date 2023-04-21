@@ -3,7 +3,7 @@ import random
 from trades import TradeM, Trade
 from utils import N_FOR_BARGAIN, GameInfo, N
 from trades_library import get_random_trade
-from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, BargainWrongNumberOfArgs
+from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, BargainWrongNumberOfArgs, InvalidTradeIndex
 from utils import list_of_randint_N
 from achievements import check_achievements, Achievement
 
@@ -21,7 +21,10 @@ class Game:
         return all(self.numbers.values())
 
     def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM]:
-        chosen_tradem = self.my_trades[chosen_trade_index]
+        try:
+            chosen_tradem = self.my_trades[chosen_trade_index]
+        except IndexError:
+            raise InvalidTradeIndex(f'Index {chosen_trade_index} is out of range')
         chosen_trade = chosen_tradem.trade
         if chosen_tradem.amount == 0:
             raise EmptyTradeM('You have 0 of this trade')

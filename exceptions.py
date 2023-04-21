@@ -19,4 +19,7 @@ class NumbersNotUnique(CustomException):
 class BargainWrongNumberOfArgs(CustomException):
     pass
 
+class InvalidTradeIndex(CustomException):
+    pass
+
 # TODO: add more exceptions so that nothing crushes
