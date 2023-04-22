@@ -40,6 +40,7 @@ class App:
             inp = input(': ')
             match inp.split():
                 case ['help']:
+                    print()
                     for command, info in HELP_STR_MENU:
                         print(f'{command:<10}\t\t{info}')
                 case ['new']:
@@ -64,7 +65,14 @@ class App:
                     if not self.game_files:
                         print('no saves')
                     else:
-                        self.save_name = self.game_files[int(game_ind_str)]
+                        try:
+                            self.save_name = self.game_files[int(game_ind_str)]
+                        except ValueError:
+                            print(f'{game_ind_str} is not an integer')
+                            continue
+                        except IndexError:
+                            print(f'There is no save with index {game_ind_str}')
+                            continue
                         with open(os.path.join(SAVES_DIR, self.save_name), 'rb') as f:
                             self.g: Game = pickle.load(f) # TODO: does not load
                             self.gi = self.g.info
@@ -96,16 +104,24 @@ class App:
         cmds = command.split()
         match cmds:
             case ['help']:
+                print()
                 for command, info in HELP_STR:
                     print(f'{command:<20}\t\t{info}')
-            case ['exit', flag]:
+            case ['exit', *flags]:
                 self.running = False
-                if not flag in ['-d', '--discard']:
-                    self.save_game()
+                if ('-d' in flags or '--discard' in flags):
+                    print('Discarded save')
+                    return
+                elif flags:
+                    print('Unknown flag(s):', flags)
+                self.save_game()
             case ['quit']:
                 self.running = False
                 self.running_menu = False
                 self.save_game()
+            case ['info']:
+                for ach in self.g.achievements:
+                    print(ach, hash(ach))
             case ['save']:
                 self.save_game()
             case ['ach' | 'achievements']:
