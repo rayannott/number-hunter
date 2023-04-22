@@ -50,6 +50,7 @@ class Odd(PaymentItem):
     def difficulty(self) -> float:
         return 0.05
 
+
 class Square(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
@@ -81,6 +82,7 @@ class Any(PaymentItem):
     def difficulty(self) -> float:
         return 0.
 
+
 class NotPrime(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
@@ -89,10 +91,19 @@ class NotPrime(PaymentItem):
         return 0.05
 
 
+class BigPrime(PaymentItem):
+    requires = ArgType.NONE
+    def __call__(self, num: int) -> bool:
+        return is_prime(num) and num > 30
+    def difficulty(self) -> float:
+        return 0.23
+
+
 PAYMENT_ITEMS: list = [
     Literal,
     Interval,
     Prime,
+    BigPrime,
     NotPrime,
     Even,
     Odd,
@@ -101,9 +112,9 @@ PAYMENT_ITEMS: list = [
     PowerOfTwo,
     Any
 ]
-PAYMENT_ITEMS_WEIGHTS: list[int] = [5, 50, 15, 30, 40, 40, 20, 10, 10, 32]
-
+PAYMENT_ITEMS_WEIGHTS: list[int] = [5, 50, 15, 10, 30, 40, 40, 10, 10, 10, 32]
 assert len(PAYMENT_ITEMS) == len(PAYMENT_ITEMS_WEIGHTS)
+
 
 def get_random_payment_item():
     PI = random.choices(PAYMENT_ITEMS, weights=PAYMENT_ITEMS_WEIGHTS, k=1)[0]
@@ -116,6 +127,7 @@ def get_random_payment_item():
     elif PI.requires == ArgType.N_INTS:
         return PI(list_of_randint_N(random.randint(1, 3)))
 
+
 PREDEFINED_PAYMENTS = [
     [Literal([2])],
     [Literal([1])],
@@ -124,6 +136,7 @@ PREDEFINED_PAYMENTS = [
     [Prime([])],
     [Square([])],
 ]
+
 
 def get_random_payment():
     if random.random() < 0.7:
