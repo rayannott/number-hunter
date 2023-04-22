@@ -4,10 +4,10 @@ import random
 from datetime import datetime
 from string import ascii_letters
 
+
 N = 100
 Nums = dict[int, int]
 N_FOR_BARGAIN = 4
-
 SAVES_DIR = 'saves'
 
 
@@ -39,6 +39,7 @@ class ArgType(Enum):
     TWO_INTS = auto() # 'two-integer-numbers'
     NONE = auto() # 'no-arguments'
     N_INTS = auto() # 'any-amount-of-ints'
+
 
 @dataclass
 class GameInfo:

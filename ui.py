@@ -120,8 +120,7 @@ class App:
                 self.running_menu = False
                 self.save_game()
             case ['info']:
-                for ach in self.g.achievements:
-                    print(ach, hash(ach))
+                print(self.g.info)
             case ['save']:
                 self.save_game()
             case ['ach' | 'achievements']:
@@ -143,6 +142,12 @@ class App:
                 self.display_nums()
                 print()
                 self.display_trades()
+            case ['missing']:
+                print('Missing numbers:', end=' ')
+                for num, amount in self.g.numbers.items():
+                    if not amount:
+                        print(num, end=' ')
+                print()
             case ['sell', trade_index]:
                 returns = self.g.sell(int(trade_index))
                 print(f'You sold the trade and received: {returns}')
@@ -180,9 +185,10 @@ class App:
     def run(self):
         self.running = True
         print(f'Started game {self.gi.save_name} from {datetime.fromtimestamp(self.gi.date_created_timestamp)}')
+        if self.g.is_victory(): print('You won this game!')
         self.execute_command('inv')
         self.alert_new_achievements()
-        while not self.g.is_victory() and self.running:
+        while self.running:
             inp = input('>>> ')
             self.execute_command(inp)
         

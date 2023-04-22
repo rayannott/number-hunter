@@ -46,7 +46,7 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
         ReturnType.MEAN,
         ReturnType.CONCATENATE,
     ],
-    'not_one_weights': [10, 7, 7, 8]
+    'not_one_weights': [8, 10, 7, 8]
 }
 
 
