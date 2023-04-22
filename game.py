@@ -1,3 +1,4 @@
+from collections import Counter
 import random
 
 from trades import TradeM, Trade
@@ -17,6 +18,7 @@ class Game:
             self.numbers[el] += 1
         self.my_trades: list[TradeM] = [get_random_trade() for _ in range(10)]
         self.achievements: set[Achievement] = check_achievements(self)
+        self.times_traded = 0
 
     def is_victory(self):
         return all(self.numbers.values())
@@ -39,7 +41,7 @@ class Game:
                 self.numbers[arg] -= 1
             for num in returns:
                 self.numbers[num] += 1
-
+            self.times_traded += 1
             chosen_tradem.amount -= 1
             gifted_trade = None if random.random() < 0.05 else get_random_trade()
             if gifted_trade:
@@ -52,12 +54,25 @@ class Game:
         self.achievements.update(completed_achievements)
         return difference
 
-    def sell(self, chosen_trade_index: int) -> list[int]:
-        chosen_tradem = self.my_trades[chosen_trade_index]
-        if chosen_tradem.amount == 0:
-            raise EmptyTradeM('You have 0 of this trade')
-        chosen_tradem.amount -= 1
-        returns = list_of_randint_N(random.randint(1, 2))
+    def sell(self, trade_ids: list[int]) -> list[int]:
+        trade_ids_to_sell = Counter(trade_ids)
+        for trade_id, amount in trade_ids_to_sell.items():
+            try:
+                this_tradem = self.my_trades[trade_id]
+            except IndexError:
+                raise InvalidTradeIndex(f'Invalid index for a trade: {trade_id}')
+            if this_tradem.amount < amount:
+                raise EmptyTradeM(f'Not enough of trade {trade_id}: tried to sell {amount}, have only {this_tradem.amount}')
+        
+        total_sold = 0
+        for trade_id, amount in trade_ids_to_sell.items():
+            self.my_trades[trade_id].amount -= amount
+            total_sold += amount
+
+        returns = []
+        for _ in range(total_sold):
+            returns.extend(list_of_randint_N(random.randint(1, 2)))
+
         for num in returns:
                 self.numbers[num] += 1
         return returns

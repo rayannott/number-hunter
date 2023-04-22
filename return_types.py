@@ -29,7 +29,7 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
         ReturnType.ADD_ONE,
         ReturnType.SUBTRACT_ONE,
     ],
-    'any_weights': [20, 7, 20, 7, 15, 15],
+    'any_weights': [15, 7, 20, 7, 15, 15],
     'one':
     [
         ReturnType.DOUBLE,
@@ -46,7 +46,7 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
         ReturnType.MEAN,
         ReturnType.CONCATENATE,
     ],
-    'not_one_weights': [8, 10, 7, 8]
+    'not_one_weights': [8, 10, 5, 8]
 }
 
 

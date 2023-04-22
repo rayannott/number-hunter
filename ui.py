@@ -28,8 +28,9 @@ HELP_STR = [
     ['ach | achievements -a', 'list all achievements'],
     ['<trade_index> *<args>', 'trade numbers!'],
     ['save', 'save the current state of the game (this is done automatically on "exit" and "quit")'],
-    ['sell <trade_index>', 'give away the chosen trade and get from 1 to 2 random numbers'],
+    ['sell *<trade_ids>', 'give away the chosen trades and get from 1 to 2 random numbers for each of them'],
     ['bargain *<args>', f'give away {N_FOR_BARGAIN} unique numbers to get one random trade'],
+    ['missing', 'print out missing numbers']
 ]
 
 class App:
@@ -121,6 +122,7 @@ class App:
                 self.save_game()
             case ['info']:
                 print(self.g.info)
+                print(f'You\'ve traded {self.g.times_traded} times')
             case ['save']:
                 self.save_game()
             case ['ach' | 'achievements']:
@@ -148,12 +150,27 @@ class App:
                     if not amount:
                         print(num, end=' ')
                 print()
-            case ['sell', trade_index]:
-                returns = self.g.sell(int(trade_index))
-                print(f'You sold the trade and received: {returns}')
+            case ['sell', *trades_ids_str]:
+                if len(self.g.achievements) < 2:
+                    print('Complete at least 2 achievements first!')
+                    return
+                try:
+                    trades_ids = list(map(int, trades_ids_str))
+                except ValueError:
+                    print('Some of the values you entered are not numbers')
+                    return
+                returns = self.g.sell(trades_ids)
+                print(f'You sold the trade(s) and received: {returns}')
                 self.alert_new_achievements()
             case ['bargain', *args_str]:
-                args = list(map(int, args_str))
+                if len(self.g.achievements) < 2:
+                    print('Complete at least 2 achievements first!')
+                    return
+                try:
+                    args = list(map(int, args_str))
+                except ValueError:
+                    print('Some of the values you entered are not numbers')
+                    return
                 try:
                     received_trade = self.g.bargain(args)
                 except CustomException as e:
@@ -170,11 +187,10 @@ class App:
                     return
                 try:
                     args = list(map(int, args_str))
+                    returns, gifted_trade = self.g.trade(trade_index, args)
                 except ValueError:
                     print('Some of the values you entered are not numbers')
                     return
-                try:
-                    returns, gifted_trade = self.g.trade(trade_index, args)
                 except CustomException as e:
                     print(e)
                     return
