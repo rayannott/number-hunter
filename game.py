@@ -73,4 +73,6 @@ class Game:
         Trade.check_nums_amounts(args, self.numbers)
         for arg in args:
                 self.numbers[arg] -= 1
-        return get_random_trade()
+        received_trade = get_random_trade()
+        self.my_trades.append(received_trade)
+        return received_trade
