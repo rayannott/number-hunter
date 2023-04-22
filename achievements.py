@@ -36,11 +36,13 @@ class AllSquares(Achievement):
     def __hash__(self) -> int:
         return 2
 
+
 class AllPrimes(Achievement):
     def __call__(self, g) -> bool:
         return all(g.numbers[p] for p in PRIMES_UP_TO_N)
     def __hash__(self) -> int:
         return 3
+
 
 class AllBelow50(Achievement):
     def __call__(self, g) -> bool:
@@ -48,11 +50,13 @@ class AllBelow50(Achievement):
     def __hash__(self) -> int:
         return 4
 
+
 class AllPowersOfTwo(Achievement):
     def __call__(self, g) -> bool:
         return all(g.numbers[2**i] for i in range(7))
     def __hash__(self) -> int:
         return 5
+
 
 class ALotOfOneNumber(Achievement):
     def __call__(self, g) -> bool:
@@ -60,17 +64,28 @@ class ALotOfOneNumber(Achievement):
     def __hash__(self) -> int:
         return 6
 
+
 class GetNumberOne(Achievement):
     def __call__(self, g) -> bool:
         return g.numbers[1] > 0
     def __hash__(self) -> int:
         return 7
 
+
+
 class TradedFirst10(Achievement):
     def __call__(self, g) -> bool:
-        return not any(trade.amount for trade in g.my_trades)
+        return not any(trade.amount for trade in g.my_trades[:10])
     def __hash__(self) -> int:
         return 8
+
+
+class TwentyZeros(Achievement):
+    def __call__(self, g) -> bool:
+        return g.numbers[0] >= 20
+    def __hash__(self) -> int:
+        return 9
+    
 
 ACHIEVEMENTS: list[Achievement] = [
     AllBelow10('Digital Collection', 'Collect all numbers below 10'),
@@ -80,7 +95,8 @@ ACHIEVEMENTS: list[Achievement] = [
     AllPowersOfTwo('True Programmer', 'Collect all powers of two'),
     ALotOfOneNumber('Dedication', 'Collect 10 or more of one number'),
     GetNumberOne('Unity', 'Get a number 1'),
-    TradedFirst10('Trading Amateur', 'Trade all trades with indices below 10')
+    TradedFirst10('Trading Amateur', 'Trade all trades with indices below 10'),
+    TwentyZeros('A bunch of 0s', 'Collect 20 or more zeros')
 ]
 
 
