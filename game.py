@@ -2,7 +2,7 @@ from collections import Counter
 import random
 
 from trades import TradeM, Trade
-from utils import N_FOR_BARGAIN, TRADES_BOUND, GameInfo, N
+from utils import N_FOR_BARGAIN, N_FOR_MEGA_BARGAIN, TRADES_BOUND, GameInfo, N
 from trades_library import get_random_trade
 from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, \
     BargainWrongNumberOfArgs, InvalidTradeIndex, TooManyTradingIndices
@@ -17,10 +17,11 @@ class Game:
         for el in list_of_randint_N(INITIAL_NUMBERS):
             self.numbers[el] += 1
         self.my_trades: list[TradeM] = [get_random_trade() for _ in range(INITIAL_TRADES)]
-        self.achievements: set[Achievement] = check_achievements(self)
+        self.victory = False
+        self.achievements: set[Achievement] = set()
         self.times_traded = 0
         self.shown_you_won_message = False
-        self.victory = False
+        self.achievements.update(check_achievements(self))
 
     def is_victory(self):
         return self.victory or all(self.numbers.values())
@@ -87,17 +88,21 @@ class Game:
                 self.numbers[num] += 1
         return returns
 
-    def bargain(self, args: list[int]) -> TradeM:
+    def bargain(self, args: list[int]) -> list[TradeM]:
         '''
         Give away N_FOR_BARGAIN different numbers and get one random trade. 
         '''
         if len(args) != len(set(args)):
             raise NumbersNotUnique(f'Numbers are not unique: {args}')
-        if len(args) != N_FOR_BARGAIN:
-            raise BargainWrongNumberOfArgs(f'Needs {N_FOR_BARGAIN} unique numbers; got {len(args)}')
+        if len(args) not in [N_FOR_BARGAIN, N_FOR_MEGA_BARGAIN]:
+            raise BargainWrongNumberOfArgs(f'Needs {N_FOR_BARGAIN} or {N_FOR_MEGA_BARGAIN} unique numbers; got {len(args)}')
+
         Trade.check_nums_amounts(args, self.numbers)
+
         for arg in args:
                 self.numbers[arg] -= 1
-        received_trade = get_random_trade()
-        self.my_trades.append(received_trade)
-        return received_trade
+
+        if len(args) == N_FOR_BARGAIN:
+            return [get_random_trade()]
+        else:
+            return [get_random_trade() for i in range(4)]
