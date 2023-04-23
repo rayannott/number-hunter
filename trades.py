@@ -55,7 +55,7 @@ class Trade:
                 res.append(f'{args[i]} is not {payment_item}')
         return res
     
-    def decide_returns(self, args) -> list[int]:
+    def decide_returns(self, args: list[int]) -> list[int]:
         match self.returns:
             case ReturnType.DOUBLE:
                 to_ret = [(args[0] * 2) % N]
@@ -93,6 +93,9 @@ class Trade:
                 to_ret = [int(''.join(map(str, args))) % N]
             case ReturnType.DIFFERENCE:
                 to_ret = [abs(args[0] - args[1])]
+            case ReturnType.UNFOLD:
+                to_ret = [(args[0] - 1) % N, (args[0] + 1) % N]
+            
             case ReturnType.RANDOM_PRIME:
                 return [random_prime() for _ in range(self.multiplier)]
             case ReturnType.RANDOM_NUMS:

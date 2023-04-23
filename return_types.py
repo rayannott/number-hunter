@@ -18,6 +18,7 @@ class ReturnType(Enum):
     CONCATENATE = auto()
     HALVE = auto()
     DIFFERENCE = auto() # returns absolute difference
+    UNFOLD = auto()
 
 HELP_RETURN_TYPES: dict[ReturnType, str] = {
     ReturnType.RANDOM_NUMS: 'get from 1 to 5 random numbers',
@@ -36,6 +37,7 @@ HELP_RETURN_TYPES: dict[ReturnType, str] = {
     ReturnType.CONCATENATE: 'get the result of a concatenation of the numbers',
     ReturnType.HALVE: 'get the number divided by two; if not integer, get two numbers: ceil(half) and floor(half)',
     ReturnType.DIFFERENCE: 'get the absolute difference between two numbers',
+    ReturnType.UNFOLD: 'get one less and one more of the given number: num-1 and num+1'
 }
 
 GROUPS_BY_PAYMENT_LEN: dict[str, tuple[list[ReturnType], list[int]]] = {
@@ -47,7 +49,7 @@ GROUPS_BY_PAYMENT_LEN: dict[str, tuple[list[ReturnType], list[int]]] = {
         ReturnType.SQUARE,
         ReturnType.ADD_ONE,
         ReturnType.SUBTRACT_ONE,
-    ], [15, 7, 20, 7, 15, 15]),
+    ], [15, 6, 20, 7, 15, 15]),
     'one': (
     [
         ReturnType.DOUBLE,
@@ -55,18 +57,19 @@ GROUPS_BY_PAYMENT_LEN: dict[str, tuple[list[ReturnType], list[int]]] = {
         ReturnType.FACTORIZE,
         ReturnType.CLOSEST_PRIME,
         ReturnType.HALVE,
-    ], [15, 20, 20, 7, 15]),
+        ReturnType.UNFOLD
+    ], [13, 12, 12, 7, 13, 15]),
     'not_one': (
     [
         ReturnType.SUM,
         ReturnType.MULT_NUMS,
         ReturnType.CONCATENATE,
-    ], [8, 10, 8]),
+    ], [8, 11, 8]),
     'two': (
     [
         ReturnType.MEAN,
         ReturnType.DIFFERENCE
-    ], [3, 13])
+    ], [5, 13])
 }
 
 for key, (r_types, weights) in GROUPS_BY_PAYMENT_LEN.items():
