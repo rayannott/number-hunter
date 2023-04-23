@@ -17,10 +17,29 @@ class ReturnType(Enum):
     SQUARE = auto()
     CONCATENATE = auto()
     HALVE = auto()
+    DIFFERENCE = auto() # returns absolute difference
 
+HELP_RETURN_TYPES: dict[ReturnType, str] = {
+    ReturnType.RANDOM_NUMS: 'get from 1 to 5 random numbers',
+    ReturnType.RANDOM_PRIME: 'get one random prime number',
+    ReturnType.CLONE: 'get the number(s) back twice their amount',
+    ReturnType.ADD_ONE: 'get the number(s) incremented by one',
+    ReturnType.SUBTRACT_ONE: 'get the number(s) decremented by one',
+    ReturnType.DOUBLE: 'get the number(s) doubled',
+    ReturnType.DIGITIZE: 'get the number\'s digits',
+    ReturnType.FACTORIZE: 'get the number\'s factors',
+    ReturnType.SUM: 'get the number\' sum',
+    ReturnType.CLOSEST_PRIME: 'get the prime number closest to the given number',
+    ReturnType.MULT_NUMS: 'get the product of the numbers',
+    ReturnType.MEAN: 'get the mean of the numbers; if not integer, get two numbers: ceil(mean) and floor(mean)',
+    ReturnType.SQUARE: 'get the square of the number(s)',
+    ReturnType.CONCATENATE: 'get the result of a concatenation of the numbers',
+    ReturnType.HALVE: 'get the number divided by two; if not integer, get two numbers: ceil(half) and floor(half)',
+    ReturnType.DIFFERENCE: 'get the absolute difference between two numbers',
+}
 
-GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
-    'any': 
+GROUPS_BY_PAYMENT_LEN: dict[str, tuple[list[ReturnType], list[int]]] = {
+    'any': (
     [
         ReturnType.RANDOM_NUMS,
         ReturnType.RANDOM_PRIME,
@@ -28,28 +47,27 @@ GROUPS_BY_PAYMENT_LEN: dict[str, list[ReturnType] | list[int]] = {
         ReturnType.SQUARE,
         ReturnType.ADD_ONE,
         ReturnType.SUBTRACT_ONE,
-    ],
-    'any_weights': [15, 7, 20, 7, 15, 15],
-    'one':
+    ], [15, 7, 20, 7, 15, 15]),
+    'one': (
     [
         ReturnType.DOUBLE,
         ReturnType.DIGITIZE,
         ReturnType.FACTORIZE,
         ReturnType.CLOSEST_PRIME,
         ReturnType.HALVE,
-    ],
-    'one_weights': [15, 20, 20, 7, 15],
-    'not_one':
+    ], [15, 20, 20, 7, 15]),
+    'not_one': (
     [
         ReturnType.SUM,
         ReturnType.MULT_NUMS,
-        ReturnType.MEAN,
         ReturnType.CONCATENATE,
-    ],
-    'not_one_weights': [8, 10, 5, 8]
+    ], [8, 10, 8]),
+    'two': (
+    [
+        ReturnType.MEAN,
+        ReturnType.DIFFERENCE
+    ], [3, 13])
 }
 
-
-assert len(GROUPS_BY_PAYMENT_LEN['any']) == len(GROUPS_BY_PAYMENT_LEN['any_weights']) and \
-    len(GROUPS_BY_PAYMENT_LEN['one']) == len(GROUPS_BY_PAYMENT_LEN['one_weights']) and \
-    len(GROUPS_BY_PAYMENT_LEN['not_one']) == len(GROUPS_BY_PAYMENT_LEN['not_one_weights'])
+for key, (r_types, weights) in GROUPS_BY_PAYMENT_LEN.items():
+    assert len(r_types) == len(weights)
