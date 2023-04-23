@@ -2,11 +2,11 @@ from collections import Counter
 import random
 
 from trades import TradeM, Trade
-from utils import N_FOR_BARGAIN, GameInfo, N
+from utils import N_FOR_BARGAIN, TRADES_BOUND, GameInfo, N
 from trades_library import get_random_trade
 from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, \
-    BargainWrongNumberOfArgs, InvalidTradeIndex
-from utils import list_of_randint_N
+    BargainWrongNumberOfArgs, InvalidTradeIndex, TooManyTradingIndices
+from utils import list_of_randint_N, INITIAL_TRADES, INITIAL_NUMBERS
 from achievements import check_achievements, Achievement
 
 
@@ -14,9 +14,9 @@ class Game:
     def __init__(self, gi: GameInfo) -> None:
         self.info = gi
         self.numbers = {i: 0 for i in range(N)}
-        for el in list_of_randint_N(10):
+        for el in list_of_randint_N(INITIAL_NUMBERS):
             self.numbers[el] += 1
-        self.my_trades: list[TradeM] = [get_random_trade() for _ in range(10)]
+        self.my_trades: list[TradeM] = [get_random_trade() for _ in range(INITIAL_TRADES)]
         self.achievements: set[Achievement] = check_achievements(self)
         self.times_traded = 0
 
@@ -24,6 +24,8 @@ class Game:
         return all(self.numbers.values())
 
     def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM]:
+        if len(self.achievements) >= 2 and (num_trades := self.num_active_trade_indices()) > TRADES_BOUND + len(self.achievements):
+            raise TooManyTradingIndices(f'Number of active trades must not exceed {TRADES_BOUND + len(self.achievements)}; you currently have {num_trades}')
         try:
             chosen_tradem = self.my_trades[chosen_trade_index]
         except IndexError:
@@ -53,6 +55,9 @@ class Game:
         difference = completed_achievements.difference(self.achievements)
         self.achievements.update(completed_achievements)
         return difference
+
+    def num_active_trade_indices(self):
+        return len([1 for tr in self.my_trades if tr.amount])
 
     def sell(self, trade_ids: list[int]) -> list[int]:
         trade_ids_to_sell = Counter(trade_ids)

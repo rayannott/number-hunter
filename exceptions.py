@@ -25,4 +25,7 @@ class BargainWrongNumberOfArgs(CustomException):
 class InvalidTradeIndex(CustomException):
     pass
 
+class TooManyTradingIndices(CustomException):
+    pass
+
 # TODO: add more exceptions so that nothing crushes
