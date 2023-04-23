@@ -94,7 +94,7 @@ class NotPrime(PaymentItem):
 class BigPrime(PaymentItem):
     requires = ArgType.NONE
     def __call__(self, num: int) -> bool:
-        return is_prime(num) and num > 30
+        return is_prime(num) and num > 40
     def difficulty(self) -> float:
         return 0.23
 
@@ -111,9 +111,24 @@ PAYMENT_ITEMS: list = [
     PerfectPower,
     PowerOfTwo,
     Any
+
 ]
-PAYMENT_ITEMS_WEIGHTS: list[int] = [5, 50, 15, 10, 30, 40, 40, 10, 10, 10, 32]
+PAYMENT_ITEMS_WEIGHTS: list[int] = [8, 40, 15, 10, 30, 40, 40, 10, 10, 10, 32]
 assert len(PAYMENT_ITEMS) == len(PAYMENT_ITEMS_WEIGHTS)
+
+HELP_PAYMENTS: dict[PaymentItem, str] = {
+    Literal: 'one of the listed numbers exactly; ex. [2] - exactly number two, [4|45] - either 4 or 45',
+    Interval: 'any number from the closed interval a:b (including the points); ex. 12:45',
+    Prime: 'any prime number',
+    BigPrime: 'any prime number > 40',
+    NotPrime: 'any non-prime number',
+    Even: 'any even number',
+    Odd: 'any odd number',
+    Square: 'any perfect square number; ex. 0, 1, 4, ..., 81',
+    PowerOfTwo: 'any number 2^b; ex. 1, 2, 4, ..., 64',
+    PerfectPower: 'any number a^b with a>1, b>1; ex. 9 as 9=3^2, 27 as 16=2^4',
+    Any: 'any number'
+}
 
 
 def get_random_payment_item():
