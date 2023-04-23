@@ -72,7 +72,6 @@ class GetNumberOne(Achievement):
         return 7
 
 
-
 class TradedFirst10(Achievement):
     def __call__(self, g) -> bool:
         return not any(trade.amount for trade in g.my_trades[:10])
@@ -87,6 +86,12 @@ class TwentyZeros(Achievement):
         return 9
     
 
+class DifferentTrades100(Achievement):
+    def __call__(self, g) -> bool:
+        return len(g.my_trades) >= 100
+    def __hash__(self) -> int:
+        return 10
+
 ACHIEVEMENTS: list[Achievement] = [
     AllBelow10('Digital Collection', 'Collect all numbers below 10'),
     AllBelow50('Lower Half', 'Collect all numbers below 50'),
@@ -96,7 +101,8 @@ ACHIEVEMENTS: list[Achievement] = [
     ALotOfOneNumber('Dedication', 'Collect 10 or more of one number'),
     GetNumberOne('Unity', 'Get a number 1'),
     TradedFirst10('Trading Amateur', 'Trade all trades with indices below 10'),
-    TwentyZeros('A bunch of 0s', 'Collect 20 or more zeros')
+    TwentyZeros('A bunch of 0s', 'Collect 20 or more zeros'),
+    DifferentTrades100('Trading Expert', 'Reach trade index 99')
 ]
 
 
