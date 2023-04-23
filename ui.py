@@ -2,10 +2,12 @@ import os
 import pickle
 from datetime import datetime
 
-from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN
+from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN, N
 from game import Game
 from exceptions import CustomException
 from achievements import ACHIEVEMENTS
+from return_types import HELP_RETURN_TYPES
+from payments_library import HELP_PAYMENTS
 
 
 HELP_STR_MENU = [
@@ -15,23 +17,37 @@ HELP_STR_MENU = [
     ['load', 'load a list of local saves'],
     ['load <index>', 'load a game with chosen index'],
     ['exit | quit', 'quit the program'],
-    ['', ''],
 ]
 
 HELP_STR = [
-    ['help', 'print this message'],
+    ['help', 'show this message'],
+    ['rules', 'print out the rules'],
     ['exit', 'save; go back to menu'],
     ['exit -d, --discard', 'do not save; go back to menu'],
     ['quit', 'save; quit the program'],
     ['inv | +', 'list your inventary: numbers and trades'],
     ['ach | achievements', 'list completed achievements'],
-    ['ach | achievements -a', 'list all achievements'],
+    ['ach | achievements -a, --all', 'list all achievements'],
     ['<trade_index> *<args>', 'trade numbers!'],
-    ['save', 'save the current state of the game (this is done automatically on "exit" and "quit")'],
+    ['save', 'save current state of the game (this is done automatically on "exit" and "quit")'],
     ['sell *<trade_ids>', 'give away the chosen trades and get from 1 to 2 random numbers for each of them'],
     ['bargain *<args>', f'give away {N_FOR_BARGAIN} unique numbers to get one random trade'],
-    ['missing', 'print out missing numbers']
+    ['missing', 'print out missing numbers'],
 ]
+
+RULES_STR = f'''
+Welcome to the Number Hunter --- the game about collecting numbers!
+The goal is to collect all integers from 0 to {N-1} by trading.
+On launch, you are shown your inventary: numbers and trades.
+Numbers are the main currency here (nerd alert!). They are listed separated by commas: <number>(<amount>).
+Trades are main way to change one numbers for anothers. Each trade consists of a payment and a return type.
+A payment is a number of slots with conditions. To trade successfully, provide a suitable number for each of these slots (order matters!).
+    For example, [Prime, Even] is a payment which needs one prime and one even number. 
+    To read more about different payment slot types, type 'payments'.
+A return type indicates what number(s) you get upon completing the trade.
+    For example, DOUBLE will get all of your submitted numbers doubled.
+    To read more about different return types, type 'returns'.
+'''
 
 class App:
     def menu(self):
@@ -44,6 +60,14 @@ class App:
                     print()
                     for command, info in HELP_STR_MENU:
                         print(f'{command:<10}\t\t{info}')
+                case ['rules']:
+                    print(RULES_STR)
+                case ['payments']:
+                    for pmt, help_str in HELP_PAYMENTS.items():
+                        print(pmt.__name__, help_str)
+                case ['returns']:
+                    for rt, help_str in HELP_RETURN_TYPES.items():
+                        print(rt.name, help_str)
                 case ['new']:
                     self.gi = GameInfo()
                     self.save_name = self.gi.save_name
@@ -108,6 +132,14 @@ class App:
                 print()
                 for command, info in HELP_STR:
                     print(f'{command:<20}\t\t{info}')
+            case ['rules']:
+                print(RULES_STR)
+            case ['payments']:
+                for pmt, help_str in HELP_PAYMENTS.items():
+                    print(pmt.__name__, help_str)
+            case ['returns']:
+                for rt, help_str in HELP_RETURN_TYPES.items():
+                    print(rt.name, help_str)
             case ['exit', *flags]:
                 self.running = False
                 if ('-d' in flags or '--discard' in flags):
