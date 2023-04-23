@@ -2,7 +2,7 @@ import os
 import pickle
 from datetime import datetime
 
-from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN, N
+from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN, N, TRADES_BOUND
 from game import Game
 from exceptions import CustomException
 from achievements import ACHIEVEMENTS
@@ -25,6 +25,9 @@ HELP_STR_MENU = [
 HELP_STR = [
     ['help', 'show this message'],
     ['rules', 'print out the rules'],
+    ['payments', 'describe each payment option'],
+    ['returns', 'describe each return type'],
+    ['info', 'print out the current game\'s info and stats'],
     ['exit', 'save; go back to menu'],
     ['exit -d, --discard', 'do not save; go back to menu'],
     ['quit', 'save; quit the program'],
@@ -32,7 +35,7 @@ HELP_STR = [
     ['ach | achievements', 'list completed achievements'],
     ['ach | achievements -a, --all', 'list all achievements'],
     ['<trade_index> *<args>', 'trade numbers!'],
-    ['save', 'save current state of the game (this is done automatically on "exit" and "quit")'],
+    ['save', 'save current state of the game (this is done automatically on \'exit\' and \'quit\')'],
     ['sell *<trade_ids>', 'give away the chosen trades and get from 1 to 2 random numbers for each of them'],
     ['bargain *<args>', f'give away {N_FOR_BARGAIN} unique numbers to get one random trade'],
     ['missing', 'print out missing numbers'],
@@ -43,7 +46,8 @@ Welcome to the Number Hunter --- the game about collecting numbers!
 The goal is to collect all integers from 0 to {N-1} by trading.
 On launch, you are shown your inventary: numbers and trades.
 Numbers are the main currency here (nerd alert!). They are listed separated by commas: <number>(<amount>).
-Trades are main way to change one numbers for anothers. Each trade consists of a payment and a return type.
+Trades are main way to change one numbers for anothers. Number of active trades is bounded by ({TRADES_BOUND} + <number of completed achievements>).\
+ Each trade consists of a payment and a return type.
 A payment is a number of slots with conditions. To trade successfully, provide a suitable number for each of these slots (order matters!).
     For example, [Prime, Even] is a payment which needs one prime and one even number. 
     To read more about different payment slot types, type 'payments'.
@@ -152,6 +156,7 @@ class App:
                     return
                 elif flags:
                     print('Unknown flag(s):', flags)
+                    return
                 self.save_game()
             case ['quit']:
                 self.running = False
@@ -159,8 +164,11 @@ class App:
                 self.save_game()
             case ['info']:
                 print(self.g.info)
-                print(f'You\'ve traded {self.g.times_traded} times')
-                print('Number of active trades:', self.g.num_active_trade_indices())
+                print(f'Traded in total: {self.g.times_traded} times')
+                print(f'Number of active trades: {self.g.num_active_trade_indices()}/{TRADES_BOUND + len(self.g.achievements)}')
+                print('Sum of all numbers (incl. duplicates):', self.g.sum_of_all_numbers())
+            case ['test']:
+                pass
             case ['save']:
                 self.save_game()
             case ['ach' | 'achievements']:
@@ -169,7 +177,7 @@ class App:
                     return
                 print(f'*** Completed achievements ({len(self.g.achievements)}/{len(ACHIEVEMENTS)}) ***')
                 for ach in self.g.achievements:
-                    print(f'{ach.name:<15}: {ach.descr}')
+                    print(f'{ach.name:<20}: {ach.descr}')
             case ['ach' | 'achievements', flag]:
                 if not flag in ['-a', '--all']:
                     print(f'{flag} is an unknown flag')
@@ -177,7 +185,7 @@ class App:
                 print('--- All achievements ---')
                 for ach in ACHIEVEMENTS:
                     posession_str = '+' if ach in self.g.achievements else '-'
-                    print(f'[{posession_str}] {ach.name:<15}: {ach.descr}')     
+                    print(f'[{posession_str}] {ach.name:<20}: {ach.descr}')     
             case ['inv' | '+']:
                 self.display_nums()
                 print()
@@ -206,7 +214,6 @@ class App:
                     print(e)
                     return
                 print(f'You sold the trade(s) and received: {returns}')
-                self.alert_new_achievements()
             case ['bargain', *args_str]:
                 if len(self.g.achievements) < 2:
                     print('Complete at least 2 achievements first!')
@@ -222,7 +229,6 @@ class App:
                     print(e)
                     return
                 print(f'Bargain successful! You received: {received_trade}')
-                self.alert_new_achievements()
             case [trade_index_str, *args_str]:
                 # trade!
                 try:
@@ -241,7 +247,11 @@ class App:
                     return
                 add = f' and new trade "{gifted_trade}".' if gifted_trade else '.'
                 print(f'You received: {returns}{add}')
-                self.alert_new_achievements()
+        if not self.g.shown_you_won_message and self.g.is_victory():
+            print('----- You won! ------')
+            self.g.shown_you_won_message = True
+            self.g.victory = True
+        self.alert_new_achievements()
 
     def run(self):
         self.running = True
@@ -253,8 +263,6 @@ class App:
             inp = input('>>> ')
             self.execute_command(inp)
         
-        if self.g.is_victory():
-            print('You won!')
 
     def save_game(self):
         with open(os.path.join(SAVES_DIR, self.save_name), 'wb') as f:
