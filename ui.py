@@ -2,7 +2,7 @@ import os
 import pickle
 from datetime import datetime
 
-from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN, N, TRADES_BOUND
+from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN, N_FOR_MEGA_BARGAIN, N, TRADES_BOUND
 from game import Game
 from exceptions import CustomException
 from achievements import ACHIEVEMENTS
@@ -37,7 +37,7 @@ HELP_STR = [
     ['<trade_index> *<args>', 'trade numbers!'],
     ['save', 'save current state of the game (this is done automatically on \'exit\' and \'quit\')'],
     ['sell *<trade_ids>', 'give away the chosen trades and get from 1 to 2 random numbers for each of them'],
-    ['bargain *<args>', f'give away {N_FOR_BARGAIN} unique numbers to get one random trade'],
+    ['bargain *<args>', f'give away {N_FOR_BARGAIN} unique numbers to get one random trade or {N_FOR_MEGA_BARGAIN} to get to choose one trade from 4 random trades'],
     ['missing', 'print out missing numbers'],
 ]
 
@@ -224,11 +224,30 @@ class App:
                     print('Some of the values you entered are not numbers')
                     return
                 try:
-                    received_trade = self.g.bargain(args)
+                    received_trades = self.g.bargain(args)
                 except CustomException as e:
                     print(e)
                     return
-                print(f'Bargain successful! You received: {received_trade}')
+                if len(received_trades) == 1:
+                    print(f'Bargain successful! You received: {received_trades[0]}')
+                    self.g.my_trades.append(received_trades[0])
+                else:
+                    print('Choose a trade to take by index:')
+                    for i, tr in enumerate(received_trades):
+                        print(f'{i}.  {tr}')
+                    successful = False
+                    while not successful:
+                        chosen_index_str = input('Your choice: ')
+                        try:
+                            chosen_trade = received_trades[int(chosen_index_str)]
+                        except ValueError:
+                            print(f'{chosen_index_str} is not an integer')
+                        except IndexError:
+                            print(f'There is no offer with index {chosen_index_str}')
+                        else:
+                            successful = True
+                            print(f'Bargain successful! You received: {chosen_trade}')
+                            self.g.my_trades.append(chosen_trade)
             case [trade_index_str, *args_str]:
                 # trade!
                 try:
@@ -255,10 +274,9 @@ class App:
 
     def run(self):
         self.running = True
-        print(f'Started game {self.gi.save_name} from {datetime.fromtimestamp(self.gi.date_created_timestamp)}')
+        print(f'Started game {self.gi}')
         if self.g.is_victory(): print('You won this game!')
         self.execute_command('inv')
-        self.alert_new_achievements()
         while self.running:
             inp = input('>>> ')
             self.execute_command(inp)

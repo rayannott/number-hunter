@@ -8,6 +8,7 @@ from string import ascii_letters
 N = 100
 Nums = dict[int, int]
 N_FOR_BARGAIN = 4
+N_FOR_MEGA_BARGAIN = 7
 SAVES_DIR = 'saves'
 TRADES_BOUND = 23
 INITIAL_TRADES = 10
