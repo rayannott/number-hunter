@@ -9,6 +9,9 @@ N = 100
 Nums = dict[int, int]
 N_FOR_BARGAIN = 4
 SAVES_DIR = 'saves'
+TRADES_BOUND = 25
+INITIAL_TRADES = 10
+INITIAL_NUMBERS = 10
 
 
 def present(nums: Nums) -> set[int]:

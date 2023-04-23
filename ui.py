@@ -113,7 +113,7 @@ class App:
                     print(f'Unknown command: {inp}')
 
     def display_nums(self):
-        print(', '.join(f'{num}({amount})' for num, amount in self.g.numbers.items() if amount))
+        print(', '.join(f'{num:>2}({amount})' for num, amount in self.g.numbers.items() if amount))
 
     def display_trades(self):
         max_width = max(len(str(trade.trade.payment)) for trade in self.g.my_trades) + 2
@@ -160,15 +160,16 @@ class App:
             case ['info']:
                 print(self.g.info)
                 print(f'You\'ve traded {self.g.times_traded} times')
+                print('Number of active trades:', self.g.num_active_trade_indices())
             case ['save']:
                 self.save_game()
             case ['ach' | 'achievements']:
                 if not self.g.achievements:
                     print('no achievements')
                     return
-                print('*** Completed achievements ***')
+                print(f'*** Completed achievements ({len(self.g.achievements)}/{len(ACHIEVEMENTS)}) ***')
                 for ach in self.g.achievements:
-                    print(f'{ach.name}: {ach.descr}')
+                    print(f'{ach.name:<15}: {ach.descr}')
             case ['ach' | 'achievements', flag]:
                 if not flag in ['-a', '--all']:
                     print(f'{flag} is an unknown flag')
@@ -176,7 +177,7 @@ class App:
                 print('--- All achievements ---')
                 for ach in ACHIEVEMENTS:
                     posession_str = '+' if ach in self.g.achievements else '-'
-                    print(f'[{posession_str}] {ach.name}: {ach.descr}')     
+                    print(f'[{posession_str}] {ach.name:<15}: {ach.descr}')     
             case ['inv' | '+']:
                 self.display_nums()
                 print()
