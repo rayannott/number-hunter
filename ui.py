@@ -12,6 +12,9 @@ from payments_library import HELP_PAYMENTS
 
 HELP_STR_MENU = [
     ['help', 'print this message'],
+    ['rules', 'print out the rules'],
+    ['payments', 'describe each payment option'],
+    ['returns', 'describe each return type'],
     ['new', 'create a new game with default settings'],
     ['new <name>', 'create a new game with a given name'],
     ['load', 'load a list of local saves'],
@@ -46,6 +49,8 @@ A payment is a number of slots with conditions. To trade successfully, provide a
     To read more about different payment slot types, type 'payments'.
 A return type indicates what number(s) you get upon completing the trade.
     For example, DOUBLE will get all of your submitted numbers doubled.
+    Depending on the difficulty of the payment, a trade can have multiplied returns (indicated by "<multiplier>* next to the return type"). \
+        This is equivalent to having traded this trade <multiplier> times.  
     To read more about different return types, type 'returns'.
 '''
 
@@ -64,10 +69,10 @@ class App:
                     print(RULES_STR)
                 case ['payments']:
                     for pmt, help_str in HELP_PAYMENTS.items():
-                        print(pmt.__name__, help_str)
+                        print(f'{pmt.__name__:<15}    {help_str}')
                 case ['returns']:
                     for rt, help_str in HELP_RETURN_TYPES.items():
-                        print(rt.name, help_str)
+                        print(f'{rt.name:<15}    {help_str}')
                 case ['new']:
                     self.gi = GameInfo()
                     self.save_name = self.gi.save_name
@@ -136,13 +141,13 @@ class App:
                 print(RULES_STR)
             case ['payments']:
                 for pmt, help_str in HELP_PAYMENTS.items():
-                    print(pmt.__name__, help_str)
+                    print(f'{pmt.__name__:<15}    {help_str}')
             case ['returns']:
                 for rt, help_str in HELP_RETURN_TYPES.items():
-                    print(rt.name, help_str)
+                    print(f'{rt.name:<15}    {help_str}')
             case ['exit', *flags]:
                 self.running = False
-                if ('-d' in flags or '--discard' in flags):
+                if '-d' in flags or '--discard' in flags:
                     print('Discarded save')
                     return
                 elif flags:
@@ -186,12 +191,19 @@ class App:
                 if len(self.g.achievements) < 2:
                     print('Complete at least 2 achievements first!')
                     return
+                if not trades_ids_str:
+                    print('No trades provided')
+                    return
                 try:
                     trades_ids = list(map(int, trades_ids_str))
                 except ValueError:
                     print('Some of the values you entered are not numbers')
                     return
-                returns = self.g.sell(trades_ids)
+                try:
+                    returns = self.g.sell(trades_ids)
+                except CustomException as e:
+                    print(e)
+                    return
                 print(f'You sold the trade(s) and received: {returns}')
                 self.alert_new_achievements()
             case ['bargain', *args_str]:
