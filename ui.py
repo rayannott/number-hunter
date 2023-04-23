@@ -60,7 +60,7 @@ A return type indicates what number(s) you get upon completing the trade.
 
 class App:
     def menu(self):
-        print('Menu')
+        print('--- Menu ---')
         self.running_menu = True
         while self.running_menu:
             inp = input(': ')
