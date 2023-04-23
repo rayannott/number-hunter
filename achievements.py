@@ -118,6 +118,13 @@ class HugeWallet(Achievement):
         return g.sum_of_all_numbers() > 12_345
     def __hash__(self) -> int:
         return 14
+    
+
+class SumExactly10000(Achievement):
+    def __call__(self, g) -> bool:
+        return g.sum_of_all_numbers() == 10_000
+    def __hash__(self) -> int:
+        return 14
 
 
 ACHIEVEMENTS: list[Achievement] = [
@@ -133,6 +140,7 @@ ACHIEVEMENTS: list[Achievement] = [
     DifferentTrades100('Trading Expert', 'Reach trade index 99'),
     AllNumbersMoreThanOne('Second Round', 'Have at least two of each number'),
     GoldenMiddle('Golden Middle', 'Have zero numbers below 20 and above 80'),
+    SumExactly10000('Very Precise', 'Let the sum of your numbers equal 10000'),
     HugeWallet('A Huge Wallet', 'Let the sum of your numbers (including duplicates) exceed 12345'),
     AllAchievementsBeforeVictory('Tough Guy!', 'Complete all achievements before winning')
 ]
