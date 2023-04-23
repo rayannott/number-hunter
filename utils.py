@@ -9,7 +9,7 @@ N = 100
 Nums = dict[int, int]
 N_FOR_BARGAIN = 4
 SAVES_DIR = 'saves'
-TRADES_BOUND = 25
+TRADES_BOUND = 23
 INITIAL_TRADES = 10
 INITIAL_NUMBERS = 10
 
@@ -47,4 +47,6 @@ class ArgType(Enum):
 @dataclass
 class GameInfo:
     save_name: str = ''.join(random.choices(ascii_letters, k=10)) + '.pi'
-    date_created_timestamp: datetime = datetime.timestamp(datetime.now())
+    date_created_timestamp: float = datetime.timestamp(datetime.now())
+    def __str__(self) -> str:
+        return f'{self.save_name}; created on {datetime.fromtimestamp(self.date_created_timestamp)}'
