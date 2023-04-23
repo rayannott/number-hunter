@@ -83,11 +83,16 @@ class Trade:
             case ReturnType.MULT_NUMS:
                 to_ret = [prod(args) % N]
             case ReturnType.MEAN:
-                to_ret = [round(sum(args)/len(args))]
+                if sum(args) % len(args) == 0:
+                    to_ret = [sum(args) // len(args)]
+                else:
+                    to_ret = [sum(args) // len(args), sum(args) // len(args) + 1]
             case ReturnType.SQUARE:
                 to_ret = [el ** 2 % N for el in args]
             case ReturnType.CONCATENATE:
                 to_ret = [int(''.join(map(str, args))) % N]
+            case ReturnType.DIFFERENCE:
+                to_ret = [abs(args[0] - args[1])]
             case ReturnType.RANDOM_PRIME:
                 return [random_prime() for _ in range(self.multiplier)]
             case ReturnType.RANDOM_NUMS:
