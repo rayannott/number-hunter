@@ -28,10 +28,13 @@ def get_random_trade() -> TradeM:
     cum_difficulty += 0.1 * len(payment)
     multiplier = min(5, max(1, round(cum_difficulty * 5)))
     random_number = random.random()
-    ONE = ('one', 'one_weights'); ANY = ('any', 'any_weights'); NOT_ONE = ('not_one', 'not_one_weights')
+    ONE = 'one'; ANY = 'any'; TWO = 'two'; NOT_ONE = 'not_one'
     if len(payment) == 1:
-        population_key, weights_key = ONE if random_number < 0.8 else ANY
+        key = ANY if random_number < 0.2 else ONE
+    elif len(payment) == 2:
+        key = random.choice([ANY, TWO, NOT_ONE])
     else:
-        population_key, weights_key = ANY if random_number < 0.75 else NOT_ONE 
-    return_type = random.choices(GROUPS_BY_PAYMENT_LEN[population_key], weights=GROUPS_BY_PAYMENT_LEN[weights_key])[0]
+        key = ANY if random_number < 0.75 else NOT_ONE 
+    population, weights = GROUPS_BY_PAYMENT_LEN[key]
+    return_type = random.choices(population, weights=weights)[0]
     return TradeM(Trade(payment, return_type, multiplier), amount)
