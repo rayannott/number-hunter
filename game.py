@@ -19,11 +19,13 @@ class Game:
         self.my_trades: list[TradeM] = [get_random_trade() for _ in range(INITIAL_TRADES)]
         self.achievements: set[Achievement] = check_achievements(self)
         self.times_traded = 0
+        self.shown_you_won_message = False
+        self.victory = False
 
     def is_victory(self):
-        return all(self.numbers.values())
+        return self.victory or all(self.numbers.values())
 
-    def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM]:
+    def trade(self, chosen_trade_index: int, args: list[int]) -> tuple[list[int], TradeM | None]:
         if len(self.achievements) >= 2 and (num_trades := self.num_active_trade_indices()) > TRADES_BOUND + len(self.achievements):
             raise TooManyTradingIndices(f'Number of active trades must not exceed {TRADES_BOUND + len(self.achievements)}; you currently have {num_trades}')
         try:
@@ -58,6 +60,9 @@ class Game:
 
     def num_active_trade_indices(self):
         return len([1 for tr in self.my_trades if tr.amount])
+
+    def sum_of_all_numbers(self):
+        return sum(k*v for k, v in self.numbers.items())
 
     def sell(self, trade_ids: list[int]) -> list[int]:
         trade_ids_to_sell = Counter(trade_ids)

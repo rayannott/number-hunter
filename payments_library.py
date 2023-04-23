@@ -32,7 +32,7 @@ class Prime(PaymentItem):
     def __call__(self, num: int) -> bool:
         return is_prime(num)
     def difficulty(self) -> float:
-        return 0.15
+        return 0.13
 
 
 class Even(PaymentItem):
@@ -56,7 +56,7 @@ class Square(PaymentItem):
     def __call__(self, num: int) -> bool:
         return is_perfect_square(num)
     def difficulty(self) -> float:
-        return 0.15
+        return 0.2
 
 
 class PerfectPower(PaymentItem):
@@ -64,7 +64,7 @@ class PerfectPower(PaymentItem):
     def __call__(self, num: int) -> bool:
         return is_perfect_power(num)
     def difficulty(self) -> float:
-        return 0.2
+        return 0.15
 
 
 class PowerOfTwo(PaymentItem):
@@ -111,12 +111,11 @@ PAYMENT_ITEMS: list = [
     PerfectPower,
     PowerOfTwo,
     Any
-
 ]
-PAYMENT_ITEMS_WEIGHTS: list[int] = [8, 40, 15, 10, 30, 40, 40, 10, 10, 10, 32]
+PAYMENT_ITEMS_WEIGHTS: list[int] = [8, 30, 15, 15, 25, 40, 40, 14, 10, 10, 32]
 assert len(PAYMENT_ITEMS) == len(PAYMENT_ITEMS_WEIGHTS)
 
-HELP_PAYMENTS: dict[PaymentItem, str] = {
+HELP_PAYMENTS = {
     Literal: 'one of the listed numbers exactly; ex. [2] - exactly number two, [4|45] - either 4 or 45',
     Interval: 'any number from the closed interval a:b (including the points); ex. 12:45',
     Prime: 'any prime number',
