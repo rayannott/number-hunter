@@ -174,18 +174,15 @@ class App:
             case ['returns']:
                 for rt, help_str in HELP_RETURN_TYPES.items():
                     print(f'{rt.name:<15}    {help_str}')
-            case ['exit', *flags]:
+            case ['exit' | 'quit', *flags]:
                 self.running = False
+                if cmds[0] == 'quit':
+                    self.running_menu = False
                 if '-d' in flags or '--discard' in flags:
                     print('Discarded save')
                     return
                 elif flags:
                     print('Unknown flag(s):', flags)
-                    return
-                self.save_game()
-            case ['quit']:
-                self.running = False
-                self.running_menu = False
                 self.save_game()
             case ['info']:
                 print(self.g.info)
