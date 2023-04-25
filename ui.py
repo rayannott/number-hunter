@@ -64,57 +64,82 @@ class App:
         self.running_menu = True
         while self.running_menu:
             inp = input(': ')
-            match inp.split():
-                case ['help']:
-                    print()
-                    for command, info in HELP_STR_MENU:
-                        print(f'{command:<10}\t\t{info}')
-                case ['rules']:
-                    print(RULES_STR)
-                case ['payments']:
-                    for pmt, help_str in HELP_PAYMENTS.items():
-                        print(f'{pmt.__name__:<15}    {help_str}')
-                case ['returns']:
-                    for rt, help_str in HELP_RETURN_TYPES.items():
-                        print(f'{rt.name:<15}    {help_str}')
-                case ['new']:
+            self.execute_command_menu(inp.split())
+            
+    def execute_command_menu(self, cmds: list[str]):
+        match cmds:
+            case ['help']:
+                print()
+                for command, info in HELP_STR_MENU:
+                    print(f'{command:<10}\t\t{info}')
+            case ['rules']:
+                print(RULES_STR)
+            case ['payments']:
+                for pmt, help_str in HELP_PAYMENTS.items():
+                    print(f'{pmt.__name__:<15}    {help_str}')
+            case ['returns']:
+                for rt, help_str in HELP_RETURN_TYPES.items():
+                    print(f'{rt.name:<15}    {help_str}')
+            case ['new', *args]:
+                name = None
+                init_trades = 10; init_nums = 10
+                if not args:
                     self.gi = GameInfo()
-                    self.save_name = self.gi.save_name
-                    self.g = Game(self.gi)
-                    self.run()
-                case ['new', name]:
-                    self.gi = GameInfo(name + '.pi')
-                    self.save_name = self.gi.save_name
-                    self.g = Game(self.gi)
-                    self.run()
-                case ['load']:
-                    self.game_files = [file for file in os.listdir('saves') if file.endswith('.pi')]
-                    if not self.game_files:
-                        print('no saves')
-                    else:
-                        for i, file in enumerate(self.game_files):
-                            print(i, file)
-                case ['load', game_ind_str]:
-                    self.game_files = [file for file in os.listdir('saves') if file.endswith('.pi')]
-                    if not self.game_files:
-                        print('no saves')
-                        continue
-                    try:
-                        self.save_name = self.game_files[int(game_ind_str)]
-                    except ValueError:
-                        print(f'{game_ind_str} is not an integer')
-                        continue
-                    except IndexError:
-                        print(f'There is no save with index {game_ind_str}')
-                        continue
-                    with open(os.path.join(SAVES_DIR, self.save_name), 'rb') as f:
-                        self.g: Game = pickle.load(f) # TODO: does not load
-                        self.gi = self.g.info
-                    self.run()
-                case ['exit' | 'quit']:
-                    self.running_menu = False
-                case _:
-                    print(f'Unknown command: {inp}')
+                else:
+                    for arg in args:
+                        if '=' not in arg:
+                            name = arg
+                        else:
+                            param, value = arg.split('=')
+                            if param == '--trades':
+                                try:
+                                    init_trades = int(value)
+                                except ValueError:
+                                    print(f'Not an integer: {value}')
+                                    return
+                            elif param == '--nums':
+                                try:
+                                    init_nums = int(value)
+                                except ValueError:
+                                    print(f'Not an integer: {value}')
+                                    return
+                            else:
+                                print('Unknown parameter:', param)
+                if name is not None:
+                    self.gi = GameInfo(name + '.pi', init_nums=init_nums, init_trades=init_trades)
+                else:
+                    self.gi = GameInfo(init_nums=init_nums, init_trades=init_trades)
+                self.save_name = self.gi.save_name
+                self.g = Game(self.gi)
+                self.run()
+            case ['load']:
+                self.game_files = [file for file in os.listdir('saves') if file.endswith('.pi')]
+                if not self.game_files:
+                    print('no saves')
+                else:
+                    for i, file in enumerate(self.game_files):
+                        print(i, file)
+            case ['load', game_ind_str]:
+                self.game_files = [file for file in os.listdir('saves') if file.endswith('.pi')]
+                if not self.game_files:
+                    print('no saves')
+                    return
+                try:
+                    self.save_name = self.game_files[int(game_ind_str)]
+                except ValueError:
+                    print(f'{game_ind_str} is not an integer')
+                    return
+                except IndexError:
+                    print(f'There is no save with index {game_ind_str}')
+                    return
+                with open(os.path.join(SAVES_DIR, self.save_name), 'rb') as f:
+                    self.g: Game = pickle.load(f) # TODO: does not load
+                    self.gi = self.g.info
+                self.run()
+            case ['exit' | 'quit']:
+                self.running_menu = False
+            case _:
+                print(f'Unknown command sequence: {cmds}')
 
     def display_nums(self):
         print(', '.join(f'{num:>2}({amount})' for num, amount in self.g.numbers.items() if amount))
@@ -191,6 +216,9 @@ class App:
                 print()
                 self.display_trades()
             case ['missing']:
+                if self.g.is_victory():
+                    print('No missing numbers')
+                    return
                 print('Missing numbers:', end=' ')
                 for num, amount in self.g.numbers.items():
                     if not amount:
