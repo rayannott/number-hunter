@@ -40,7 +40,7 @@ HELP_STR = [
     ['bargain *<args>', f'give away {N_FOR_BARGAIN} unique numbers to get one random trade or {N_FOR_MEGA_BARGAIN} to get to choose one trade from 4 random trades'],
     ['missing', 'print out missing numbers'],
 ]
-
+ 
 RULES_STR = f'''
 Welcome to the Number Hunter --- the game about collecting numbers!
 The goal is to collect all integers from 0 to {N-1} by trading.
@@ -98,19 +98,19 @@ class App:
                     self.game_files = [file for file in os.listdir('saves') if file.endswith('.pi')]
                     if not self.game_files:
                         print('no saves')
-                    else:
-                        try:
-                            self.save_name = self.game_files[int(game_ind_str)]
-                        except ValueError:
-                            print(f'{game_ind_str} is not an integer')
-                            continue
-                        except IndexError:
-                            print(f'There is no save with index {game_ind_str}')
-                            continue
-                        with open(os.path.join(SAVES_DIR, self.save_name), 'rb') as f:
-                            self.g: Game = pickle.load(f) # TODO: does not load
-                            self.gi = self.g.info
-                        self.run()
+                        continue
+                    try:
+                        self.save_name = self.game_files[int(game_ind_str)]
+                    except ValueError:
+                        print(f'{game_ind_str} is not an integer')
+                        continue
+                    except IndexError:
+                        print(f'There is no save with index {game_ind_str}')
+                        continue
+                    with open(os.path.join(SAVES_DIR, self.save_name), 'rb') as f:
+                        self.g: Game = pickle.load(f) # TODO: does not load
+                        self.gi = self.g.info
+                    self.run()
                 case ['exit' | 'quit']:
                     self.running_menu = False
                 case _:
