@@ -6,7 +6,7 @@ from utils import N_FOR_BARGAIN, N_FOR_MEGA_BARGAIN, TRADES_BOUND, GameInfo, N
 from trades_library import get_random_trade
 from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, \
     BargainWrongNumberOfArgs, InvalidTradeIndex, TooManyTradingIndices
-from utils import list_of_randint_N, INITIAL_TRADES, INITIAL_NUMBERS
+from utils import list_of_randint_N
 from achievements import check_achievements, Achievement
 
 
@@ -14,9 +14,9 @@ class Game:
     def __init__(self, gi: GameInfo) -> None:
         self.info = gi
         self.numbers = {i: 0 for i in range(N)}
-        for el in list_of_randint_N(INITIAL_NUMBERS):
+        for el in list_of_randint_N(self.info.init_nums):
             self.numbers[el] += 1
-        self.my_trades: list[TradeM] = [get_random_trade() for _ in range(INITIAL_TRADES)]
+        self.my_trades: list[TradeM] = [get_random_trade() for _ in range(self.info.init_trades)]
         self.victory = False
         self.achievements: set[Achievement] = set()
         self.times_traded = 0
