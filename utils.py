@@ -11,8 +11,6 @@ N_FOR_BARGAIN = 4
 N_FOR_MEGA_BARGAIN = 7
 SAVES_DIR = 'saves'
 TRADES_BOUND = 20
-INITIAL_TRADES = 10
-INITIAL_NUMBERS = 10
 
 
 def present(nums: Nums) -> set[int]:
@@ -49,5 +47,7 @@ class ArgType(Enum):
 class GameInfo:
     save_name: str = ''.join(random.choices(ascii_letters, k=10)) + '.pi'
     date_created_timestamp: float = datetime.timestamp(datetime.now())
+    init_nums: int = 10
+    init_trades: int = 10
     def __str__(self) -> str:
-        return f'{self.save_name}; created on {datetime.fromtimestamp(self.date_created_timestamp)}'
+        return f'{self.save_name}; created on {datetime.fromtimestamp(self.date_created_timestamp)}; started with {self.init_nums} nums and {self.init_trades} trades'
