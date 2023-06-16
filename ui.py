@@ -304,10 +304,11 @@ class App:
         self.execute_command('inv')
         while self.running:
             inp = input('>>> ')
-            self.execute_command(inp)
-        
+            self.execute_command(inp)   
 
     def save_game(self):
+        if not os.path.exists(SAVES_DIR):
+            os.mkdir(SAVES_DIR)
         with open(os.path.join(SAVES_DIR, self.save_name), 'wb') as f:
             pickle.dump(self.g, f)
         print('Saved')
