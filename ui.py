@@ -113,6 +113,8 @@ class App:
                 self.g = Game(self.gi)
                 self.run()
             case ['load']:
+                if not os.path.exists(SAVES_DIR):
+                    os.mkdir(SAVES_DIR)
                 self.game_files = [file for file in os.listdir('saves') if file.endswith('.pi')]
                 if not self.game_files:
                     print('no saves')
