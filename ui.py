@@ -157,7 +157,7 @@ class App:
         if just_completed_achievements:
             print('--- New achievement! ---')
             for ach in just_completed_achievements:
-                print(f'{ach.name}: {ach.descr}')
+                print(ach.describe())
 
     def execute_command(self, command: str):
         cmds = command.split()
@@ -199,7 +199,7 @@ class App:
                     return
                 print(f'*** Completed achievements ({len(self.g.achievements)}/{len(ACHIEVEMENTS)}) ***')
                 for ach in self.g.achievements:
-                    print(f'{ach.name:<20}: {ach.descr}')
+                    print(ach.describe())
             case ['ach' | 'achievements', flag]:
                 if not flag in ['-a', '--all']:
                     print(f'{flag} is an unknown flag')
@@ -207,7 +207,7 @@ class App:
                 print('--- All achievements ---')
                 for ach in ACHIEVEMENTS:
                     posession_str = '+' if ach in self.g.achievements else '-'
-                    print(f'[{posession_str}] {ach.name:<20}: {ach.descr}')     
+                    print(f'[{posession_str}] {ach.describe()}')     
             case ['inv' | '+']:
                 self.display_nums()
                 print()
@@ -295,6 +295,10 @@ class App:
             print('----- You won! ------')
             self.g.shown_you_won_message = True
             self.g.victory = True
+            for ach in ACHIEVEMENTS:
+                ach.activate()
+            for ach in self.g.achievements:
+                ach.activate()
         self.alert_new_achievements()
 
     def run(self):
