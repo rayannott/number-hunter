@@ -112,6 +112,8 @@ class App:
                 self.g = Game(self.gi)
                 self.run()
             case ['load']:
+                if not os.path.exists(SAVES_DIR):
+                    os.mkdir(SAVES_DIR)
                 self.game_files = [file for file in os.listdir('saves') if file.endswith('.pi')]
                 if not self.game_files:
                     print('no saves')
@@ -156,7 +158,7 @@ class App:
         if just_completed_achievements:
             print('--- New achievement! ---')
             for ach in just_completed_achievements:
-                print(f'{ach.name}: {ach.descr}')
+                print(ach.describe())
 
     def execute_command(self, command: str):
         cmds = command.split()
@@ -198,7 +200,7 @@ class App:
                     return
                 print(f'*** Completed achievements ({len(self.g.achievements)}/{len(ACHIEVEMENTS)}) ***')
                 for ach in self.g.achievements:
-                    print(f'{ach.name:<20}: {ach.descr}')
+                    print(ach.describe())
             case ['ach' | 'achievements', flag]:
                 if flag not in ['-a', '--all']:
                     print(f'{flag} is an unknown flag')
@@ -206,7 +208,7 @@ class App:
                 print('--- All achievements ---')
                 for ach in ACHIEVEMENTS:
                     posession_str = '+' if ach in self.g.achievements else '-'
-                    print(f'[{posession_str}] {ach.name:<20}: {ach.descr}')     
+                    print(f'[{posession_str}] {ach.describe()}')     
             case ['inv' | '+']:
                 self.display_nums()
                 print()
@@ -294,6 +296,10 @@ class App:
             print('----- You won! ------')
             self.g.shown_you_won_message = True
             self.g.victory = True
+            for ach in ACHIEVEMENTS:
+                ach.activate()
+            for ach in self.g.achievements:
+                ach.activate()
         self.alert_new_achievements()
 
     def run(self):
@@ -303,10 +309,11 @@ class App:
         self.execute_command('inv')
         while self.running:
             inp = input('>>> ')
-            self.execute_command(inp)
-        
+            self.execute_command(inp)   
 
     def save_game(self):
+        if not os.path.exists(SAVES_DIR):
+            os.mkdir(SAVES_DIR)
         with open(os.path.join(SAVES_DIR, self.save_name), 'wb') as f:
             pickle.dump(self.g, f)
         print('Saved')

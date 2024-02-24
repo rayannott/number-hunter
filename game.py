@@ -66,19 +66,17 @@ class Game:
         return sum(k*v for k, v in self.numbers.items())
 
     def sell(self, trade_ids: list[int]) -> list[int]:
-        trade_ids_to_sell = Counter(trade_ids)
-        for trade_id, amount in trade_ids_to_sell.items():
+        
+        for trade_id in trade_ids:
             try:
                 this_tradem = self.my_trades[trade_id]
             except IndexError:
                 raise InvalidTradeIndex(f'Invalid index for a trade: {trade_id}')
-            if this_tradem.amount < amount:
-                raise EmptyTradeM(f'Not enough of trade {trade_id}: tried to sell {amount}, have only {this_tradem.amount}')
         
         total_sold = 0
-        for trade_id, amount in trade_ids_to_sell.items():
-            self.my_trades[trade_id].amount -= amount
-            total_sold += amount
+        for trade_id in trade_ids:
+            total_sold += self.my_trades[trade_id].amount
+            self.my_trades[trade_id].amount = 0
 
         returns = []
         for _ in range(total_sold):

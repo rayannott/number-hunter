@@ -4,15 +4,22 @@ from abc import ABC, abstractmethod
 from math_tools import PRIMES_UP_TO_N
 
 class Achievement(ABC):
-    def __init__(self, name: str, descr: str) -> None:
+    def __init__(self, name: str, descr: str, active: bool = True) -> None:
         self.name = name
         self.descr = descr
+        self.active = active
 
     def __repr__(self):
         return self.__class__.__name__
     
+    def describe(self):
+        return f'{self.name:<20}: {self.descr if self.active else "???"}'
+    
     def __eq__(self, other: 'Achievement'):
         return self.name == other.name and self.descr == other.descr
+
+    def activate(self):
+        self.active = True
     
     @abstractmethod
     def __hash__(self) -> int:
@@ -129,20 +136,19 @@ class SumExactly10000(Achievement):
 
 ACHIEVEMENTS: list[Achievement] = [
     AllBelow10('Digital Collection', 'Collect all numbers below 10'),
+    GetNumberOne('Unity', 'Get a number 1'),
+    ALotOfOneNumber('Dedication', 'Collect 10 or more of any number'),
     AllBelow50('Lower Half', 'Collect all numbers below 50'),
     AllPrimes('Prime Minister', 'Collect all prime numbers'),
     AllSquares('Square Fan', 'Collect all perfect square numbers'),
     AllPowersOfTwo('True Programmer', 'Collect all powers of two'),
-    ALotOfOneNumber('Dedication', 'Collect 10 or more of any number'),
-    GetNumberOne('Unity', 'Get a number 1'),
     TradedFirst10('Trading Amateur', 'Trade all trades with indices below 10'),
     TwentyZeros('A Bunch of Nothing', 'Collect 20 or more zeros'),
-    DifferentTrades100('Trading Expert', 'Reach trade index 99'),
-    AllNumbersMoreThanOne('Second Round', 'Have at least two of each number'),
-    GoldenMiddle('Golden Middle', 'Have zero numbers below 20 and above 80'),
-    SumExactly10000('Very Precise', 'Let the sum of your numbers equal 10000'),
-    HugeWallet('A Huge Wallet', 'Let the sum of your numbers (including duplicates) exceed 12345'),
-    AllAchievementsBeforeVictory('Tough Guy!', 'Complete all achievements before winning')
+    DifferentTrades100('Trading Expert', 'Reach trade index 99', active=False),
+    GoldenMiddle('Golden Middle', 'Have zero numbers below 20 and above 80', active=False),
+    SumExactly10000('Very Precise', 'Let the sum of your numbers equal 10000', active=False),
+    HugeWallet('A Huge Wallet', 'Let the sum of your numbers (including duplicates) exceed 12345', active=False),
+    AllNumbersMoreThanOne('Second Round', 'Have at least two of each number', active=False),
 ]
 
 
