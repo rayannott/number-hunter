@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from math_tools import is_prime
 
 from utils import ArgType
 

@@ -1,6 +1,5 @@
 import os
 import pickle
-from datetime import datetime
 
 from utils import SAVES_DIR, GameInfo, N_FOR_BARGAIN, N_FOR_MEGA_BARGAIN, N, TRADES_BOUND
 from game import Game
@@ -201,7 +200,7 @@ class App:
                 for ach in self.g.achievements:
                     print(f'{ach.name:<20}: {ach.descr}')
             case ['ach' | 'achievements', flag]:
-                if not flag in ['-a', '--all']:
+                if flag not in ['-a', '--all']:
                     print(f'{flag} is an unknown flag')
                     return
                 print('--- All achievements ---')
