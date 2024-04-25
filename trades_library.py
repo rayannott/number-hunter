@@ -1,7 +1,7 @@
 import random
 
 from trades import Trade, TradeM
-from return_types import GROUPS_BY_PAYMENT_LEN
+from return_types import GROUPS_BY_PAYMENT_LEN, ReturnType
 from payments_library import get_random_payment
 
 
@@ -16,7 +16,7 @@ PREDEFINED_TRADEMS_WEIGHTS = [
 assert len(PREDEFINED_TRADEMS) == len(PREDEFINED_TRADEMS_WEIGHTS)
 
 
-def get_random_trade() -> TradeM:
+def get_random_trade(is_bargain: bool = False) -> TradeM:
     # if random.random() < 0.1:
     #     return random.choices(PREDEFINED_TRADEMS, weights=PREDEFINED_TRADEMS_WEIGHTS)[0]
     
@@ -34,7 +34,10 @@ def get_random_trade() -> TradeM:
     elif len(payment) == 2:
         key = random.choice([ANY, TWO, NOT_ONE])
     else:
-        key = ANY if random_number < 0.75 else NOT_ONE 
-    population, weights = GROUPS_BY_PAYMENT_LEN[key]
-    return_type = random.choices(population, weights=weights)[0]
+        key = ANY if random_number < 0.75 else NOT_ONE
+    if not is_bargain:
+        population, weights = GROUPS_BY_PAYMENT_LEN[key]
+        return_type = random.choices(population, weights=weights)[0]
+    else:
+        return_type = ReturnType.RANDOM_NUMS
     return TradeM(Trade(payment, return_type, multiplier), amount)

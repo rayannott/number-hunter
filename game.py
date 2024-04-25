@@ -101,6 +101,6 @@ class Game:
                 self.numbers[arg] -= 1
 
         if len(args) == N_FOR_BARGAIN:
-            return [get_random_trade()]
+            return [get_random_trade(is_bargain=True)]
         else:
-            return [get_random_trade() for i in range(4)]
+            return [get_random_trade(is_bargain=True) for i in range(4)]
