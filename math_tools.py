@@ -12,10 +12,13 @@ def is_prime(n: int) ->  bool:
             return False    
     return True
 
+
 def get_primes_up_to():
     return [el for el in range(N) if is_prime(el)]
 
+
 PRIMES_UP_TO_N = get_primes_up_to()
+
 
 def random_prime() -> int:
     return random.choice(PRIMES_UP_TO_N)
@@ -51,6 +54,7 @@ def closest_prime(n: int) -> int:
             above = n+i
             if 0 <= above < N:
                 return above
+    raise ValueError('No prime found')
 
 
 def all_prime_factors(n: int) -> list[int]:
