@@ -99,7 +99,10 @@ class BigPrime(PaymentItem):
         return 0.23
 
 
-PAYMENT_ITEMS: list = [
+from typing import Type
+
+
+PAYMENT_ITEMS: list[Type[PaymentItem]] = [
     Literal,
     Interval,
     Prime,
@@ -140,9 +143,11 @@ def get_random_payment_item():
         return PI(randinterval())
     elif PI.requires == ArgType.N_INTS:
         return PI(list_of_randint_N(random.randint(1, 3)))
+    else:
+        raise ValueError('Invalid ArgType')
 
 
-PREDEFINED_PAYMENTS = [
+PREDEFINED_PAYMENTS: list[list[PaymentItem]] = [
     [Literal([2])],
     [Literal([1])],
     [Even([]), Odd([])],
