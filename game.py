@@ -7,7 +7,7 @@ from trades_library import get_random_trade
 from exceptions import EmptyTradeM, CustomException, NumbersNotUnique, \
     BargainWrongNumberOfArgs, InvalidTradeIndex, TooManyTradingIndices
 from utils import list_of_randint_N
-from achievements import check_achievements, Achievement
+from achievements import check_achievements, Achievement, ACHIEVEMENTS
 
 
 class Game:
@@ -22,6 +22,15 @@ class Game:
         self.times_traded = 0
         self.shown_you_won_message = False
         self.achievements.update(check_achievements(self))
+        print(self.victory)
+
+    def pre_start(self):
+        if self.is_victory():
+            print('You won this game!')
+            for ach in self.achievements:
+                ach.activate()
+            for ach in ACHIEVEMENTS:
+                ach.activate()
 
     def is_victory(self):
         return self.victory or all(self.numbers.values())

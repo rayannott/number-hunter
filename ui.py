@@ -305,7 +305,7 @@ class App:
     def run(self):
         self.running = True
         print(f'Started game {self.gi}')
-        if self.g.is_victory(): print('You won this game!')
+        self.g.pre_start()
         self.execute_command('inv')
         while self.running:
             inp = input('>>> ')

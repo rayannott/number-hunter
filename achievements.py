@@ -131,7 +131,7 @@ class SumExactly10000(Achievement):
     def __call__(self, g) -> bool:
         return g.sum_of_all_numbers() == 10_000
     def __hash__(self) -> int:
-        return 14
+        return 15
 
 
 ACHIEVEMENTS: list[Achievement] = [

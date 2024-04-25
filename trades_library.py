@@ -35,9 +35,9 @@ def get_random_trade(is_bargain: bool = False) -> TradeM:
         key = random.choice([ANY, TWO, NOT_ONE])
     else:
         key = ANY if random_number < 0.75 else NOT_ONE
-    if not is_bargain:
+    if is_bargain and random.random() < 0.5:
+        return_type = ReturnType.RANDOM_NUMS
+    else:
         population, weights = GROUPS_BY_PAYMENT_LEN[key]
         return_type = random.choices(population, weights=weights)[0]
-    else:
-        return_type = ReturnType.RANDOM_NUMS
     return TradeM(Trade(payment, return_type, multiplier), amount)
