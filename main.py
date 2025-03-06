@@ -6,5 +6,5 @@ def main():
     app.menu()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
