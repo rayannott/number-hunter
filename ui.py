@@ -58,7 +58,7 @@ HELP_STR = [
 
 RULES_STR = f"""
 Welcome to the Number Hunter --- the game about collecting numbers!
-The goal is to collect all integers from 0 to {N-1} by trading.
+The goal is to collect all integers from 0 to {N - 1} by trading.
 On launch, you are shown your inventary: numbers and trades.
 Numbers are the main currency here (nerd alert!). They are listed separated by commas: <number>(<amount>).
 Trades are main way to change one numbers for anothers. Number of active trades is bounded by ({TRADES_BOUND} + <number of completed achievements>).\
@@ -184,7 +184,7 @@ class App:
                     f"{pure_trade.multiplier}*" if pure_trade.multiplier > 1 else "  "
                 )
                 print(
-                    f'{i:>3}.({trade.amount}) {str(pure_trade.payment) + " "*(max_width - len(str(pure_trade.payment)))}     ->    {multiplier_str}{pure_trade.returns.name}'
+                    f"{i:>3}.({trade.amount}) {str(pure_trade.payment) + ' ' * (max_width - len(str(pure_trade.payment)))}     ->    {multiplier_str}{pure_trade.returns.name}"
                 )
 
     def alert_new_achievements(self):
@@ -255,14 +255,21 @@ class App:
                 print()
                 self.display_trades()
             case ["missing"]:
+                missing_str = " ".join(
+                    str(num) for num, amount in self.g.numbers.items() if not amount
+                )
+                if missing_str:
+                    print(f"Missing numbers: {missing_str}")
+                else:
+                    print("You have all numbers!")
                 if self.g.is_victory():
-                    print("No missing numbers")
-                    return
-                print("Missing numbers:", end=" ")
-                for num, amount in self.g.numbers.items():
-                    if not amount:
-                        print(num, end=" ")
-                print()
+                    missing_second = " ".join(
+                        str(num) for num, amount in self.g.numbers.items() if amount < 2
+                    )
+                    if missing_second:
+                        print(f"You have less than two of: {missing_second}")
+                    else:
+                        print("You have all numbers in at least two copies!")
             case ["sell", *trades_ids_str]:
                 if len(self.g.achievements) < 2:
                     print("Complete at least 2 achievements first!")
