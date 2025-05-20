@@ -156,7 +156,7 @@ class SumExactly10000(Achievement):
 
 ACHIEVEMENTS: list[Achievement] = [
     AllBelow10("Digital Collection", "Collect all numbers below 10"),
-    GetNumberOne("Unity", "Get a number 1"),
+    GetNumberOne("Unity", "Get the number one"),
     ALotOfOneNumber("Dedication", "Collect 10 or more of any number"),
     AllBelow50("Lower Half", "Collect all numbers below 50"),
     AllPrimes("Prime Minister", "Collect all prime numbers"),
